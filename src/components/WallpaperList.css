@@ -1,0 +1,48 @@
+.wallpaper-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 16px;
+  position: relative; /* Added for positioning */
+}
+
+.wallpaper-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.wallpaper-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.wallpaper-item:hover {
+  transform: scale(1.05);
+}
+
+/* Styles for the Load More button */
+.load-more {
+  padding: 10px 20px; /* Button padding */
+  background-color: #007bff; /* Button color */
+  color: white; /* Text color */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 16px; /* Font size */
+  transition: background-color 0.3s; /* Transition for hover effect */
+}
+
+/* Centering container for the button */
+.button-container {
+  display: flex; /* Use flexbox to center */
+  justify-content: center; /* Center horizontally */
+  margin: 20px 0; /* Add vertical margin */
+}
+
+.load-more:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+}

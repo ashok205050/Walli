@@ -1,26 +1,36 @@
-// src/App.js
-
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import WallpaperList from './components/WallpaperList';
 import WallpaperUpload from './components/WallpaperUpload';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import GoogleSignIn from './components/GoogleSignIn'; 
 
+const App = () => {
+  const location = useLocation();
+  const [userInfo, setUserInfo] = useState(null); // State to hold user info
 
-function App() {
+  const isAuthPage = location.pathname === '/upload' || location.pathname === '/signin';
+
   return (
-    <Router>
-      <Navbar/>
+    <>
+      {!isAuthPage && <Navbar userInfo={userInfo} setUserInfo={setUserInfo} />} {/* Pass userInfo */}
       <div className="App">
         <Routes>
           <Route path="/" element={<WallpaperList />} />
           <Route path="/upload" element={<WallpaperUpload />} />
+          <Route path="/signin" element={<GoogleSignIn />} /> 
         </Routes>
       </div>
-      <Footer/>
-    </Router>
+      {!isAuthPage && <Footer />}
+    </>
   );
-}
+};
 
-export default App;
+const Main = () => (
+  <Router>
+    <App />
+  </Router>
+);
+
+export default Main;
