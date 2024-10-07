@@ -1,0 +1,38 @@
+/* ImageDetails.css */
+.image-details-container {
+    display: flex;
+    align-items: center; /* Vertically center the items */
+    height: 100vh; /* Full viewport height */
+    overflow: hidden; /* Prevent overflow */
+  }
+  
+  .image {
+    max-width: 100%; /* Scale image to fit */
+    max-height: 100vh; /* Limit height to viewport */
+    object-fit: cover; /* Cover the area */
+  }
+  
+  .details {
+    margin-left: 20px; /* Space between image and details */
+    max-width: 300px; /* Optional: limit the width of the details section */
+    color: #333; /* Text color */
+  }
+  
+  h2 {
+    margin: 0; /* Remove default margin */
+  }
+  
+  .download-button {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+  
+  .download-button:hover {
+    background-color: #0056b3;
+  }
+  

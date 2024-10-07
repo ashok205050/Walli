@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google';
-import {jwtDecode} from 'jwt-decode';
 import './Navbar.css';
 import WallpaperList from './WallpaperList';
 
@@ -11,24 +9,29 @@ const Navbar = () => {
   const [isCategoriesVisible, setCategoriesVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const [userInfo, setUserInfo] = useState(null); // State to hold user info
+  const [userInfo, setUserInfo] = useState(null);
+  const [username, setUsername] = useState(''); // State to hold the username
 
   // Check for user info in local storage
   useEffect(() => {
     const savedUserInfo = localStorage.getItem('userInfo');
+    const savedUsername = localStorage.getItem('username'); // Get the username from local storage
     if (savedUserInfo) {
       setUserInfo(JSON.parse(savedUserInfo));
     }
+    if (savedUsername) {
+      setUsername(savedUsername); // Set the username state
+    }
   }, []);
 
-  // Toggles the visibility of categories in the menu
+  // Toggle visibility of categories menu
   const toggleCategories = (event) => {
     event.stopPropagation();
     setCategoriesVisible(!isCategoriesVisible);
     document.body.classList.toggle('no-scroll', !isCategoriesVisible);
   };
 
-  // Closes the categories list
+  // Close the categories menu
   const closeCategories = () => {
     if (isCategoriesVisible) {
       setCategoriesVisible(false);
@@ -36,7 +39,7 @@ const Navbar = () => {
     }
   };
 
-  // Handles category selection
+  // Handle category selection
   const handleCategorySelection = (category) => {
     setSelectedCategory(category);
     setSearchQuery('');  // Clear search when selecting a category
@@ -44,32 +47,21 @@ const Navbar = () => {
     closeCategories(); // Close category menu
   };
 
-  // Handles search submission
+  // Handle search submission
   const handleSearch = (event) => {
     event.preventDefault();
-    navigate(`/?search=${searchQuery}`);  // Update URL with the search query
-  };
-
-  // Handles Google Sign-In success
-  const handleLoginSuccess = (credentialResponse) => {
-    const token = credentialResponse.credential;
-    const decoded = jwtDecode(token);
-    setUserInfo(decoded); // Set user info in state
-    localStorage.setItem('userInfo', JSON.stringify(decoded)); // Save user info to local storage
-  };
-
-  // Handles Google Sign-In error
-  const handleLoginError = () => {
-    alert('Login Failed. Please try again.');
+    navigate(`/?search=${searchQuery}`); // Update URL with the search query
   };
 
   // Logout handler
   const handleLogout = () => {
     setUserInfo(null);
+    setUsername(''); // Clear the username state
     localStorage.removeItem('userInfo'); // Remove user info from local storage
+    localStorage.removeItem('username'); // Remove username from local storage
   };
 
-  // Syncs the component with URL parameters for categories and search
+  // Sync with URL parameters for categories and search
   useEffect(() => {
     const handleDocumentClick = (event) => {
       if (!event.target.closest('.categories-container') && !event.target.closest('.hamburger')) {
@@ -77,20 +69,17 @@ const Navbar = () => {
       }
     };
 
-    // Listen for clicks outside of the category menu to close it
     document.addEventListener('click', handleDocumentClick);
 
-    // Get the category and search query from the URL on component mount
     const params = new URLSearchParams(location.search);
     const categoryFromUrl = params.get('category');
     const searchFromUrl = params.get('search');
 
-    // Set the selected category if found in the URL
+    // Set selected category and search query from URL
     if (categoryFromUrl) {
       setSelectedCategory(categoryFromUrl);
     }
 
-    // Set the search query if found in the URL
     if (searchFromUrl) {
       setSearchQuery(searchFromUrl);
     }
@@ -104,7 +93,7 @@ const Navbar = () => {
     <header>
       <nav className="navbar">
         <div className="logo">
-          <Link to="#">W A L L I</Link>
+          <Link to="/">W A L L I</Link>
         </div>
         <div className="hamburger" id="hamburgerMenu" onClick={toggleCategories}>
           <a>&#9776; <span>Categories</span></a>
@@ -142,23 +131,17 @@ const Navbar = () => {
             <i className="fa-solid fa-arrow-up-from-bracket"></i>
             <span> Upload</span>
           </a>
-          {userInfo ? ( // Display user info if logged in
+          {userInfo ? (
             <div className="user-info">
               <img src={userInfo.picture} alt="Profile" className="profile-picture" />
-              <span>Welcome, {userInfo.name}</span>
-              <a onClick={handleLogout} href="#">Logout</a> {/* Logout functionality */}
+              <span>Welcome, {username}</span> {/* Display username here */}
+              <a onClick={handleLogout} href="#">Logout</a>
             </div>
           ) : (
-            <GoogleLogin
-              onSuccess={handleLoginSuccess}
-              onError={handleLoginError}
-              render={({ onClick }) => (
-                <a onClick={onClick} href="#">
-                  <i className="fa-regular fa-user"></i>
-                  <span> Sign in</span>
-                </a>
-              )}
-            />
+            <a onClick={() => navigate('/signin')} href="#">
+              <i className="fa-regular fa-user"></i>
+              <span> Sign in</span>
+            </a>
           )}
         </div>
       </nav>
@@ -178,14 +161,6 @@ const Navbar = () => {
           </button>
         </form>
       </div>
-
-      {/* Secondary Navbar to display the selected category */}
-      <div className="secondary-navbar">
-        Wallpapers {selectedCategory && ` / ${selectedCategory}`}
-      </div>
-
-      {/* Render WallpaperList with both category and search query */}
-      <WallpaperList selectedCategory={selectedCategory} searchQuery={searchQuery} />
     </header>
   );
 };

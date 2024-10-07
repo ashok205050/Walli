@@ -1,0 +1,59 @@
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import './ImageDetails.css'; // Ensure to have this CSS file
+
+const ImageDetails = () => {
+  const { id } = useParams();
+  const [wallpaper, setWallpaper] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchWallpaperDetails = async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/api/wallpapers/${id}/`);
+        const data = await response.json();
+        setWallpaper(data);
+      } catch (error) {
+        console.error("Error fetching wallpaper details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWallpaperDetails();
+  }, [id]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (!wallpaper) {
+    return <p>Wallpaper not found.</p>;
+  }
+
+  const handleDownload = (e) => {
+    e.preventDefault(); // Prevent default action
+
+    // Create a link element
+    const link = document.createElement('a');
+    link.href = wallpaper.image; // The URL of the image
+    link.setAttribute('download', wallpaper.title); // Specify a download filename
+    document.body.appendChild(link); // Append to body
+    link.click(); // Trigger a click to download
+    document.body.removeChild(link); // Remove the link from the DOM
+  };
+
+  return (
+    <div className="image-details-container">
+      <img className="image" src={wallpaper.image} alt={wallpaper.title} />
+      <div className="details">
+        <h2>{wallpaper.title}</h2>
+        <p><strong>Category:</strong> {wallpaper.category || 'N/A'}</p> {/* Display category */}
+        {wallpaper.description && <p><strong>Description:</strong> {wallpaper.description}</p>}
+        <button onClick={handleDownload} className="download-button">Download</button> {/* Use button for download */}
+      </div>
+    </div>
+  );
+};
+
+export default ImageDetails;
