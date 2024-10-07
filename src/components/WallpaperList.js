@@ -1,59 +1,78 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'; // Import Link
+import { Link, useLocation } from 'react-router-dom';
 import './WallpaperList.css';
 
-const WallpaperList = ({ selectedCategory, searchQuery }) => {
+const WallpaperList = () => {
+  const location = useLocation();
   const [wallpapers, setWallpapers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(30); // Number of wallpapers to display initially
+  const [visibleCount, setVisibleCount] = useState(30);
+  const [selectedCategory, setSelectedCategory] = useState('all'); // Used for potential future functionality
+  const [searchQuery, setSearchQuery] = useState(''); // Used for potential future functionality
+
+  // Fetch wallpapers based on the current category and search query
+  const fetchWallpapers = async (category, search) => {
+    setLoading(true);
+    let apiUrl = 'http://127.0.0.1:8000/api/wallpapers/';
+    const params = [];
+
+    if (category !== 'all') {
+      params.push(`category=${category}`);
+    }
+    if (search) {
+      params.push(`search=${search}`); // Ensure this uses the correct search query
+    }
+
+    if (params.length > 0) {
+      apiUrl += '?' + params.join('&');
+    }
+
+    try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setWallpapers(data.results || []);
+    } catch (error) {
+      console.error("Error fetching wallpapers:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchWallpapers = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch('http://127.0.0.1:8000/api/wallpapers/');
-        const data = await response.json();
-        
-        setWallpapers(data.results); // Assuming the wallpapers are in data.results
-      } catch (error) {
-        console.error("Error fetching wallpapers:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    // Read the search query and category from the URL
+    const params = new URLSearchParams(location.search);
+    const categoryFromUrl = params.get('category') || 'all';
+    const searchFromUrl = params.get('search') || '';
 
-    fetchWallpapers();
-  }, []);
+    // Set the state from URL parameters
+    setSelectedCategory(categoryFromUrl);
+    setSearchQuery(searchFromUrl); // Ensure the global search query state is updated
 
-  // Filter wallpapers based on selected category and search query
-  const filteredWallpapers = wallpapers.filter((wallpaper) => {
-    const matchesCategory = selectedCategory ? wallpaper.category === selectedCategory : true;
-    const matchesSearch = searchQuery ? wallpaper.title.toLowerCase().includes(searchQuery.toLowerCase()) : true;
-    return matchesCategory && matchesSearch;
-  });
+    // Fetch wallpapers when the component mounts and when URL changes
+    fetchWallpapers(categoryFromUrl, searchFromUrl);
+  }, [location.search]); // Trigger fetchWallpapers when URL changes
 
-  // Load more wallpapers
   const loadMore = () => {
-    setVisibleCount(prevCount => prevCount + 30); // Increase visible count by 30
+    setVisibleCount((prevCount) => prevCount + 30);
   };
 
   return (
     <div className="wallpaper-container">
       {loading && <p>Loading...</p>}
-      {filteredWallpapers.length > 0 ? (
-        filteredWallpapers.slice(0, visibleCount).map((wallpaper) => (
-          <div className="wallpaper-item" key={wallpaper.id}>
-            <Link to={`/image/${wallpaper.id}`}>
-              <img src={wallpaper.image} alt={wallpaper.title} />
-            </Link>
-          </div>
-        ))
-      ) : (
-        !loading && null // Don't display anything if there are no wallpapers and not loading
+      {!loading && wallpapers.length === 0 && (
+        <p>No wallpapers found for the selected category or search query.</p>
       )}
-      
-      {/* Show Load More button if there are more wallpapers to show */}
-      {filteredWallpapers.length > visibleCount && (
+      {wallpapers.slice(0, visibleCount).map((wallpaper) => (
+        <div className="wallpaper-item" key={wallpaper.id}>
+          <Link to={`/image/${wallpaper.id}`}>
+            <img src={wallpaper.image} alt={wallpaper.title} />
+          </Link>
+        </div>
+      ))}
+      {wallpapers.length > visibleCount && (
         <div className="button-container">
           <button onClick={loadMore} className="load-more">
             Load More
