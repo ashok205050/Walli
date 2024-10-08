@@ -1,7 +1,6 @@
-// SignUp.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './SignUp.css'; // Make sure your styles are correct
+import './SignUp.css';
 
 const SignUp = () => {
   const [username, setUsername] = useState('');
@@ -15,7 +14,7 @@ const SignUp = () => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:8000/api/signup/', { // Update with your backend URL
+      const response = await fetch('http://localhost:8000/api/signup/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

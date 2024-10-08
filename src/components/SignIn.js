@@ -93,6 +93,7 @@ const SignIn = () => {
       />
 
       <p>Don't have an account? <button onClick={() => navigate('/signup')}>Sign Up</button></p>
+      <p>Forgot your password? <button onClick={() => navigate('/reset-password')}>Reset Password</button></p>
     </div>
   );
 };

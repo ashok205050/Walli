@@ -11,6 +11,8 @@ import Aboutus from './components/Aboutus';
 import SignIn from './components/SignIn';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import SignUp from './components/SignUp';
+import ResetPassword from './components/ResetPassword'; // Import ResetPassword
+import ResetPasswordConfirm from './components/ResetPasswordConfirm'; // Import ResetPasswordConfirm
 
 const App = () => {
   const location = useLocation();
@@ -30,7 +32,9 @@ const App = () => {
   const isAuthPage = 
     location.pathname === '/upload' || 
     location.pathname === '/signin' || 
-    location.pathname === '/signup'; // Include signup
+    location.pathname === '/signup' || 
+    location.pathname === '/reset-password' || 
+    location.pathname.includes('/reset-password-confirm'); // Include reset password
 
   const isImagePage = location.pathname.includes('/image/');
   const isContactPage = location.pathname === '/contact'; 
@@ -56,6 +60,8 @@ const App = () => {
             <Route path="/contact" element={<ContactForm />} />
             <Route path="/about" element={<Aboutus />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/reset-password" element={<ResetPassword />} /> {/* Password reset route */}
+            <Route path="/reset-password-confirm/:uid/:token" element={<ResetPasswordConfirm />} /> {/* Password reset confirm route */}
           </Routes>
         </div>
         {!isAuthPage && !isImagePage && !isContactPage && !isAboutPage && <Footer />}
@@ -71,4 +77,4 @@ const Main = () => (
   </Router>
 );
 
-export default Main;
+export default Main;  
