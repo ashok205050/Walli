@@ -9,7 +9,9 @@
   padding: 0.8rem 1rem;
   position: relative;
 }
-
+#upload-button{
+  display: none; 
+}
 .search-bar{
   display: none;
 }

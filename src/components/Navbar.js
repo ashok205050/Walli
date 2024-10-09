@@ -10,6 +10,7 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
   const [userInfo, setUserInfo] = useState(null);
   const [username, setUsername] = useState('');
   const [selectedCategory, setLocalSelectedCategory] = useState(''); // State for selected category
+  const [isLogoutVisible, setLogoutVisible] = useState(false); // State to toggle logout visibility
 
   useEffect(() => {
     const savedUserInfo = localStorage.getItem('userInfo');
@@ -59,7 +60,6 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
     navigate(`/?search=${searchQueryInput}`); // Update URL with search query
   };
 
-  // Handle secondary search submission
   const handleSecondarySearch = (event) => {
     event.preventDefault();
     setSearchQuery(searchQueryInput); // Set the search query in App.js
@@ -71,6 +71,15 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
     setUsername('');
     localStorage.removeItem('userInfo');
     localStorage.removeItem('username');
+    setLogoutVisible(false); // Hide logout after logging out
+  };
+
+  const handleUploadClick = () => {
+    if (userInfo) {
+      navigate('/upload'); // Navigate to the upload page if the user is signed in
+    } else {
+      navigate('/signin'); // Redirect to sign-in page if the user is not signed in
+    }
   };
 
   const handleDocumentClick = (event) => {
@@ -85,6 +94,10 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
       document.removeEventListener('click', handleDocumentClick);
     };
   }, []);
+
+  const toggleLogoutVisibility = () => {
+    setLogoutVisible((prevState) => !prevState); // Toggle logout visibility
+  };
 
   return (
     <header>
@@ -121,22 +134,21 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
         </div>
 
         <div className="credentials">
-          <a href="#" id="upload-button">
+          <a href="#" id="upload-button" onClick={handleUploadClick}>
             <i className="fa-solid fa-arrow-up-from-bracket"></i>
             <span> Upload</span>
           </a>
           {userInfo ? (
-            <div className="user-info">
-              <img src={userInfo.picture} alt="Profile" className="profile-picture" />
-              <span>{username}</span> {/* Ensure this shows the username */}
-              <a onClick={handleLogout} href="#">Logout</a>
-            </div>
-          ) : (
-            <a onClick={() => navigate('/signin')} href="#">
-              <i className="fa-regular fa-user"></i>
-              <span> Sign in</span>
-            </a>
-          )}
+                <div className="user-info">
+                  <img src={userInfo.picture} alt="Profile" className="profile-picture" />
+                  <span onClick={() => navigate('/profile')}>{username}</span> {/* Navigate to profile page */}
+                </div>
+              ) : (
+                <a onClick={() => navigate('/signin')} href="#">
+                  <i className="fa-regular fa-user"></i>
+                  <span> Sign in</span>
+                </a>
+              )}
         </div>
       </nav>
 

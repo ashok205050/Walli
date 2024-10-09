@@ -48,9 +48,27 @@ const ImageDetails = () => {
       <img className="image" src={wallpaper.image} alt={wallpaper.title} />
       <div className="details">
         <h2>{wallpaper.title}</h2>
-        <p><strong>Category:</strong> {wallpaper.category || 'N/A'}</p> {/* Display category */}
-        {wallpaper.description && <p><strong>Description:</strong> {wallpaper.description}</p>}
-        <button onClick={handleDownload} className="download-button">Download</button> {/* Use button for download */}
+        <p><strong>Category:</strong> {wallpaper.category || 'N/A'}</p>
+        {wallpaper.description && (
+          <p><strong>Description:</strong> {wallpaper.description}</p>
+        )}
+        <p><strong>Uploaded At:</strong> {new Date(wallpaper.uploaded_at).toLocaleString()}</p> {/* Display upload time */}
+        <p>
+          <strong>Uploaded By:</strong> 
+          {wallpaper.uploaded_by && (
+            <span>
+              <img 
+                src={wallpaper.uploaded_by.profile_picture || '/default-profile.png'} 
+                alt="Profile" 
+                style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '10px' }} 
+              />
+              <a href={`/profile/${wallpaper.uploaded_by.id}`}>
+                {wallpaper.uploaded_by.username}
+              </a>
+            </span>
+          )}
+        </p>
+        <button onClick={handleDownload} className="download-button">Download</button>
       </div>
     </div>
   );

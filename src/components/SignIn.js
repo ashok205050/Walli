@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode} from 'jwt-decode'; // Correct import for jwtDecode
 import './SignIn.css';
 
 const SignIn = () => {
@@ -18,6 +18,7 @@ const SignIn = () => {
     const decoded = jwtDecode(token);
     localStorage.setItem('userInfo', JSON.stringify(decoded));
     localStorage.setItem('username', decoded.name || decoded.email.split('@')[0]); // Save username in local storage
+    localStorage.setItem('token', token); // Save token in local storage
     setSuccessMessage('Login Successful!');
     setTimeout(() => {
       navigate('/'); // Redirect to home page after 2 seconds
@@ -54,6 +55,7 @@ const SignIn = () => {
         }
         localStorage.setItem('userInfo', JSON.stringify(data.userInfo)); // Save user info to local storage
         localStorage.setItem('username', data.userInfo.username || identifier.split('@')[0]); // Save the username returned from the server
+        localStorage.setItem('token', data.token); // Store the token in local storage
         setSuccessMessage('Login Successful!');
         setTimeout(() => {
           navigate('/'); // Redirect to home page after 2 seconds

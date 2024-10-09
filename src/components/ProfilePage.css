@@ -1,0 +1,51 @@
+.profile-page {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.profile-picture {
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  align-items: center; /* Center the profile picture and input */
+}
+
+.profile-picture img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-bottom: 10px; /* Space between image and file input */
+}
+
+.profile-details {
+  margin-top: 20px;
+}
+
+.profile-details label {
+  display: block;
+  margin: 10px 0 5px;
+}
+
+.profile-details p,
+.profile-details input,
+.profile-details textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 15px; /* Space below input fields */
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
