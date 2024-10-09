@@ -29,9 +29,19 @@ const SignUp = () => {
       } else {
         const errorData = await response.json();
         setError(errorData.error || 'An error occurred. Please try again.');
+
+        // Refresh the page after 2 seconds
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       }
     } catch (error) {
       setError('Network error. Please try again.');
+      
+      // Refresh the page after 2 seconds
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     }
   };
 

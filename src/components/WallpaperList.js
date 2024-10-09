@@ -6,7 +6,7 @@ const WallpaperList = () => {
   const location = useLocation();
   const [wallpapers, setWallpapers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(30);
+  const [visibleCount, setVisibleCount] = useState(20); // Start with 20 wallpapers
   const [selectedCategory, setSelectedCategory] = useState('all'); // Used for potential future functionality
   const [searchQuery, setSearchQuery] = useState(''); // Used for potential future functionality
 
@@ -33,7 +33,11 @@ const WallpaperList = () => {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      setWallpapers(data.results || []);
+      
+      // Log the fetched wallpapers to check the response
+      console.log(data.results); // Log results to verify response structure
+
+      setWallpapers(data.results || []); // Store fetched wallpapers
     } catch (error) {
       console.error("Error fetching wallpapers:", error);
     } finally {
@@ -56,7 +60,11 @@ const WallpaperList = () => {
   }, [location.search]); // Trigger fetchWallpapers when URL changes
 
   const loadMore = () => {
-    setVisibleCount((prevCount) => prevCount + 30);
+    setVisibleCount((prevCount) => {
+      const newCount = prevCount + 20; // Load 20 more wallpapers
+      // Ensure we do not exceed the total number of wallpapers
+      return newCount > wallpapers.length ? wallpapers.length : newCount;
+    });
   };
 
   return (
@@ -72,7 +80,7 @@ const WallpaperList = () => {
           </Link>
         </div>
       ))}
-      {wallpapers.length > visibleCount && (
+      {visibleCount < wallpapers.length && (
         <div className="button-container">
           <button onClick={loadMore} className="load-more">
             Load More

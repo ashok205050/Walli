@@ -41,7 +41,7 @@ const App = () => {
   const isAboutPage = location.pathname === '/about'; 
 
   return (
-    <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
+    <GoogleOAuthProvider clientId="508427224480-akif3jf54m5l6p930eb32eqilh5fja7d.apps.googleusercontent.com">
       <div>
         {!isAuthPage && !isImagePage && !isContactPage && !isAboutPage && (
           <Navbar 

@@ -5,13 +5,22 @@ import { useParams } from 'react-router-dom';
 const ResetPasswordConfirm = () => {
   const { uid, token } = useParams();
   const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrorMessage('');
     setSuccessMessage('');
+
+    // Check if passwords match
+    if (newPassword !== confirmPassword) {
+      setErrorMessage("Passwords do not match. Please try again.");
+      return;
+    }
 
     // API call to reset password
     fetch('http://localhost:8000/api/password-reset-confirm/', { // Adjust to your backend URL
@@ -19,11 +28,13 @@ const ResetPasswordConfirm = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ uid, token, new_password: newPassword }),
+      body: JSON.stringify({ uid, token, new_password: newPassword }), // Removed confirm_password from the request body
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Failed to reset password. Please try again.');
+          return response.json().then(data => { // Parse the response for error messages
+            throw new Error(data.error || 'Failed to reset password. Please try again.'); // Use error message from the server if available
+          });
         }
         return response.json();
       })
@@ -32,20 +43,50 @@ const ResetPasswordConfirm = () => {
       })
       .catch((error) => {
         setErrorMessage(error.message);
+
+        // Refresh the page after 2 seconds
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       });
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
   };
 
   return (
     <div className="reset-password-confirm-container">
       <h2>Reset Password</h2>
       <form onSubmit={handleSubmit}>
-        <input
-          type="password"
-          placeholder="Enter your new password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          required
-        />
+        <div>
+          <input
+            type={showPassword ? 'text' : 'password'}
+            placeholder="Enter your new password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            required
+          />
+          <button type="button" onClick={togglePasswordVisibility}>
+            {showPassword ? 'Hide' : 'Show'}
+          </button>
+        </div>
+        <div>
+          <input
+            type={showConfirmPassword ? 'text' : 'password'}
+            placeholder="Confirm your new password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+          <button type="button" onClick={toggleConfirmPasswordVisibility}>
+            {showConfirmPassword ? 'Hide' : 'Show'}
+          </button>
+        </div>
         <button type="submit">Reset Password</button>
       </form>
       {errorMessage && <p className="error">{errorMessage}</p>}

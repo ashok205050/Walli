@@ -128,7 +128,7 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
           {userInfo ? (
             <div className="user-info">
               <img src={userInfo.picture} alt="Profile" className="profile-picture" />
-              <span>Welcome, {username}</span>
+              <span>{username}</span> {/* Ensure this shows the username */}
               <a onClick={handleLogout} href="#">Logout</a>
             </div>
           ) : (
@@ -140,21 +140,21 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
         </div>
       </nav>
 
-                  {/* Secondary Search Bar */}
-        <div className="search-bar">
-          <form onSubmit={handleSecondarySearch}>
-            <input
-              type="text"
-              value={searchQueryInput}
-              onChange={(e) => setSearchQueryInput(e.target.value)} // Update local search query state
-              placeholder="Search W A L L I"
-              aria-label="Search"
-            />
-            <button type="submit" aria-label="Search Button">
-              <i className="fa-solid fa-magnifying-glass"></i>
-            </button>
-          </form>
-        </div>
+      {/* Secondary Search Bar */}
+      <div className="search-bar">
+        <form onSubmit={handleSecondarySearch}>
+          <input
+            type="text"
+            value={searchQueryInput}
+            onChange={(e) => setSearchQueryInput(e.target.value)} // Update local search query state
+            placeholder="Search W A L L I"
+            aria-label="Search"
+          />
+          <button type="submit" aria-label="Search Button">
+            <i className="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </form>
+      </div>
 
       {/* Secondary Navbar */}
       <div className="secondary-navbar" id="secondaryNavbar">

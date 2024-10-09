@@ -6,17 +6,18 @@ import './SignIn.css';
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
+  const [identifier, setIdentifier] = useState(''); // Changed to identifier for username/email
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
 
   // Handle Google login success
   const handleLoginSuccess = (credentialResponse) => {
     const token = credentialResponse.credential;
     const decoded = jwtDecode(token);
     localStorage.setItem('userInfo', JSON.stringify(decoded));
-    localStorage.setItem('username', decoded.name || decoded.email); // Save username in local storage
+    localStorage.setItem('username', decoded.name || decoded.email.split('@')[0]); // Save username in local storage
     setSuccessMessage('Login Successful!');
     setTimeout(() => {
       navigate('/'); // Redirect to home page after 2 seconds
@@ -38,7 +39,7 @@ const SignIn = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ identifier, password }), // Use identifier instead of username
     })
       .then((response) => {
         if (!response.ok) {
@@ -52,7 +53,7 @@ const SignIn = () => {
           throw new Error('No user info received from server');
         }
         localStorage.setItem('userInfo', JSON.stringify(data.userInfo)); // Save user info to local storage
-        localStorage.setItem('username', username); // Save username to local storage
+        localStorage.setItem('username', data.userInfo.username || identifier.split('@')[0]); // Save the username returned from the server
         setSuccessMessage('Login Successful!');
         setTimeout(() => {
           navigate('/'); // Redirect to home page after 2 seconds
@@ -60,7 +61,15 @@ const SignIn = () => {
       })
       .catch((error) => {
         setErrorMessage(error.message);
+        setTimeout(() => {
+          // Refresh the page after 2 seconds
+          window.location.reload();
+        }, 2000);
       });
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword); // Toggle the visibility state
   };
 
   return (
@@ -69,18 +78,23 @@ const SignIn = () => {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Username or Email" // Update placeholder
+          value={identifier} // Bind to identifier
+          onChange={(e) => setIdentifier(e.target.value)} // Update state for identifier
           required
         />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <div>
+          <input
+            type={showPassword ? 'text' : 'password'} // Change input type based on showPassword state
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="button" onClick={togglePasswordVisibility}>
+            {showPassword ? 'Hide' : 'Show'} {/* Button text changes based on visibility */}
+          </button>
+        </div>
         <button type="submit">Sign In</button>
       </form>
 
