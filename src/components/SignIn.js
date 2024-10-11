@@ -76,7 +76,7 @@ const SignIn = () => {
 
   return (
     <div className="signin-container">
-      <h2>Sign In</h2>
+      <h2>Sign In to W A L L I</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -85,31 +85,32 @@ const SignIn = () => {
           onChange={(e) => setIdentifier(e.target.value)} // Update state for identifier
           required
         />
-        <div>
-          <input
-            type={showPassword ? 'text' : 'password'} // Change input type based on showPassword state
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <button type="button" onClick={togglePasswordVisibility}>
-            {showPassword ? 'Hide' : 'Show'} {/* Button text changes based on visibility */}
-          </button>
-        </div>
-        <button type="submit">Sign In</button>
+          <div className="password-container">
+            <input
+              type={showPassword ? 'text' : 'password'} // Change input type based on showPassword state
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button type="button" className="toggle-password" onClick={togglePasswordVisibility}>
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+          </div>
+        <button className='signin-button' type="submit">Sign In</button>
       </form>
 
       {errorMessage && <p className="error">{errorMessage}</p>}
       {successMessage && <p className="success">{successMessage}</p>}
 
+      <p>Don't have an account? <button className='button' onClick={() => navigate('/signup')}>Sign Up</button></p>
+      <p>Forgot your password? <button className='button' onClick={() => navigate('/reset-password')}>Reset Password</button></p>
+
+      
       <GoogleLogin
         onSuccess={handleLoginSuccess}
         onError={handleLoginError}
       />
-
-      <p>Don't have an account? <button onClick={() => navigate('/signup')}>Sign Up</button></p>
-      <p>Forgot your password? <button onClick={() => navigate('/reset-password')}>Reset Password</button></p>
     </div>
   );
 };

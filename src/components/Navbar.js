@@ -83,7 +83,14 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
   };
 
   const handleDocumentClick = (event) => {
-    if (!event.target.closest('.categories-container') && !event.target.closest('.hamburger')) {
+    const categoriesContainer = document.querySelector('.categories-container');
+    const hamburger = document.querySelector('.hamburger');
+
+    if (
+      isCategoriesVisible &&
+      !categoriesContainer.contains(event.target) && // Close if click outside category container
+      !hamburger.contains(event.target) // Close if click outside hamburger
+    ) {
       closeCategories();
     }
   };
@@ -93,7 +100,7 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
     return () => {
       document.removeEventListener('click', handleDocumentClick);
     };
-  }, []);
+  }, [isCategoriesVisible]); // Re-run when `isCategoriesVisible` changes
 
   const toggleLogoutVisibility = () => {
     setLogoutVisible((prevState) => !prevState); // Toggle logout visibility
@@ -120,18 +127,21 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
         </div>
         <div className="search-container">
           <form onSubmit={handleSearch}>
-            <input
-              type="text"
-              value={searchQueryInput}
-              onChange={(e) => setSearchQueryInput(e.target.value)} // Update local search query state
-              placeholder="Search W A L L I"
-              aria-label="Search"
-            />
-            <button type="submit" aria-label="Search Button">
-              <i className="fa-solid fa-magnifying-glass"></i>
-            </button>
+            <div className="input-with-button">
+              <input
+                type="text"
+                value={searchQueryInput}
+                onChange={(e) => setSearchQueryInput(e.target.value)} 
+                placeholder="Search W A L L I"
+                aria-label="Search"
+              />
+              <button type="submit" aria-label="Search Button">
+                <i className="fa-solid fa-magnifying-glass"></i>
+              </button>
+            </div>
           </form>
         </div>
+
 
         <div className="credentials">
           <a href="#" id="upload-button" onClick={handleUploadClick}>
@@ -168,10 +178,18 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
         </form>
       </div>
 
-      {/* Secondary Navbar */}
-      <div className="secondary-navbar" id="secondaryNavbar">
-        Wallpapers {selectedCategory && ` / ${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}`}
-      </div>
+     {/* Secondary Navbar */}
+<div className="secondary-navbar" id="secondaryNavbar">
+  <div className="navbar-content">
+    <span>Wallpapers</span>
+    {selectedCategory && <span className="separator"> / </span>}  {/* Added spaces around the separator */}
+    {selectedCategory && <span className="selected-category">{selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}</span>}
+  </div>
+</div>
+
+
+
+
     </header>
   );
 };

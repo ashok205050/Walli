@@ -2,6 +2,10 @@
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
+  color: white;
+}
+h1{
+  color: white;
 }
 
 .profile-picture {
@@ -36,10 +40,10 @@
   margin-bottom: 15px; /* Space below input fields */
 }
 
-button {
-  margin-top: 20px;
+.profile-page button {
+  margin: 20px;
   padding: 10px 20px;
-  background-color: #4CAF50;
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
@@ -47,5 +51,5 @@ button {
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #0056b3;
 }

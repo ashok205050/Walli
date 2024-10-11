@@ -89,12 +89,12 @@ const ProfilePage = () => {
         )}
       </div>
       {editMode ? (
-        <button onClick={handleSave}>Save</button>
+        <button className="profile-btn" onClick={handleSave}>Save</button>
       ) : (
-        <button onClick={() => setEditMode(true)}>Edit Profile</button>
+        <button className="profile-btn" onClick={() => setEditMode(true)}>Edit Profile</button>
       )}
-      <button onClick={handleLogout} style={{ marginTop: '20px' }}>Logout</button>
-      <button onClick={() => navigate('/')} style={{ marginTop: '10px' }}>Back to Home</button>
+      <button className="profile-btn" onClick={handleLogout} style={{ marginTop: '20px' }}>Logout</button>
+      <button className="profile-btn"s onClick={() => navigate('/')} style={{ marginTop: '10px' }}>Back to Home</button>
     </div>
   );
 };

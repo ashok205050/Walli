@@ -1,8 +1,8 @@
 .wallpaper-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-  padding: 16px;
+  grid-template-columns: repeat(6, 1fr); /* Default: 6 equal columns */
+  gap: 16px; /* Gap between images */
+  padding: 50px 100px; /* Horizontal padding to create space from screen edges */
   position: relative; /* Added for positioning */
 }
 
@@ -12,22 +12,28 @@
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s;
+  width: 100%; /* Ensure the item takes full width */
+  height: 0; /* Set height to zero to use padding for aspect ratio */
+  padding-top: 177.78%; /* 9:16 Aspect Ratio (16/9 = 1.7778, so 1/1.7778 = 0.5625, hence 100/56.25 = 177.78%) */
 }
 
 .wallpaper-item img {
-  width: 100%;
-  height: auto;
-  display: block;
+  position: absolute; /* Positioning the image inside the container */
+  top: 0;
+  left: 0;
+  width: 100%; /* Set width to 100% for responsiveness */
+  height: 100%; /* Set height to 100% to fill the container */
+  object-fit: cover; /* Maintain aspect ratio and cover the area */
 }
 
-.wallpaper-item:hover {
+/* .wallpaper-item:hover {
   transform: scale(1.05);
-}
+} */
 
 /* Styles for the Load More button */
 .load-more {
   padding: 10px 20px; /* Button padding */
-  background-color: #007bff; /* Button color */
+  background-color: rgb(218, 99, 231); /* Button color */
   color: white; /* Text color */
   border: none; /* Remove border */
   border-radius: 5px; /* Rounded corners */
@@ -45,4 +51,37 @@
 
 .load-more:hover {
   background-color: #0056b3; /* Darker shade on hover */
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 1200px) {
+  .wallpaper-container {
+    grid-template-columns: repeat(5, 1fr); /* 5 columns for medium screens */
+  }
+}
+
+@media (max-width: 992px) {
+  .wallpaper-container {
+    grid-template-columns: repeat(4, 1fr); /* 4 columns for smaller screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .wallpaper-container {
+    grid-template-columns: repeat(3, 1fr); /* 3 columns for tablet screens */
+  }
+}
+
+@media (max-width: 576px) {
+  .wallpaper-container {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns for mobile screens */
+    padding: 0 20px; /* Adjust padding for mobile */
+  }
+}
+
+@media (max-width: 400px) {
+  .wallpaper-container {
+    grid-template-columns: repeat(1, 1fr); /* 1 column for very small screens */
+    padding: 0 10px; /* Further adjust padding for very small screens */
+  }
 }

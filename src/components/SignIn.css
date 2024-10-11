@@ -1,35 +1,157 @@
+/* Base styles for the sign-in container */
+
 .signin-container {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  top: 50%;
+  box-sizing: border-box; /* Ensures padding and width are calculated together */
+  width: 100%; /* Ensure the container takes full width on smaller screens */
+  overflow: hidden; /* Prevents content from overflowing */
+}
+/* Adjust the spacing between the paragraphs */
+.signin-container p {
+  margin: 5px 0; /* Reduce the margin to decrease the gap */
+  font-size: 0.9rem; /* Optional: Adjust the font size if necessary */
+}
+
+/* Optional: Button adjustments for consistent styling */
+.signin-container .button {
+  background: none;
+  color: #007bff;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 0.9rem; /* Ensure button text size matches the surrounding text */
+}
+
+.signin-container .button:focus {
+  outline: none;
+}
+
+
+/* Responsive password container */
+.password-container {
+  position: relative;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.password-container input {
+  width: 100%;
+  padding-right: 45px; /* Adjust padding to fit the button */
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box; /* Ensure padding and width are calculated together */
+}
+
+.password-container .toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%; /* Vertically center the button */
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  height: 100%; 
+  display: flex;
+  align-items: center; 
+}
+
+.password-container .toggle-password:focus {
+  outline: none;
+}
+
+/* General input styling for the form */
+.signin-form input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  box-sizing: border-box;
+}
+
+.signin-button {
+  background-color: #007bff;
+  width: 100%; /* Ensure the button takes full width */
+  padding: 12px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin: 20px 0;
+}
+
+.signin-button:hover {
+  background-color: #0056b3;
+}
+
+.button {
+  background: none;
+  color: #007bff;
+  border: none;
+  cursor: pointer;
+  margin: 0;
+}
+
+
+
+
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+  .signin-container {
+    padding: 15px; /* Reduce padding for smaller screens */
+    max-width: 90%; /* Make the container occupy more space on smaller screens */
   }
-  
+
   .signin-form input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
+    font-size: 0.9rem; /* Slightly smaller font size for inputs */
   }
-  
+
   .signin-button {
     padding: 10px;
-    width: 100%;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
+    font-size: 0.9rem;
   }
-  
-  .signin-button:hover {
-    background-color: #45a049;
+
+  .password-container input {
+    padding: 8px; /* Adjust padding */
   }
-  
-  .google-signin-container {
-    margin-top: 20px;
+  .password-container .toggle-password {
+    top: 50%;
   }
-  
-  .google-signin-container p {
-    margin-bottom: 10px;
+}
+
+@media (max-width: 480px) {
+  .signin-container {
+    padding: 10px; /* Even smaller padding for very small screens */
+    max-width: 95%; /* Occupy almost full width */
   }
-  
+
+  .signin-form input {
+    font-size: 0.85rem; /* Smaller font size for smaller screens */
+  }
+
+  .signin-button {
+    padding: 8px;
+    font-size: 0.85rem;
+  }
+
+  .password-container input {
+    padding: 6px;
+  }
+
+  .password-container .toggle-password {
+    top: 50%;
+  }
+}
+
+p{
+  color: white;
+}

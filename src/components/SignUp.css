@@ -4,14 +4,13 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-color: #f0f0f0;
     padding: 20px;
   }
   
   .signup-container h2 {
     margin-bottom: 20px;
     font-size: 2rem;
-    color: #333;
+    color: #007bff;
   }
   
   .signup-container form {
@@ -20,7 +19,6 @@
     width: 100%;
     max-width: 400px;
     padding: 20px;
-    background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }

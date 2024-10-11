@@ -15,7 +15,7 @@ import ResetPasswordConfirm from './components/ResetPasswordConfirm';
 import ProfilePage from './components/ProfilePage';
 
 const App = () => {
-  const location = useLocation();
+  const location = useLocation(); // useLocation should be inside App component
   const [userInfo, setUserInfo] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');

@@ -6,7 +6,7 @@ const WallpaperList = () => {
   const location = useLocation();
   const [wallpapers, setWallpapers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(20); // Start with 20 wallpapers
+  const [visibleCount, setVisibleCount] = useState(24); // Start with 20 wallpapers
   const [selectedCategory, setSelectedCategory] = useState('all'); // Used for potential future functionality
   const [searchQuery, setSearchQuery] = useState(''); // Used for potential future functionality
 
