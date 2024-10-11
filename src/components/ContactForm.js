@@ -29,6 +29,10 @@ const ContactForm = () => {
   };
 
   return (
+    <>
+          <header className="privacy-policy-header">
+        <h1>Contact to W A L L I</h1>
+      </header>
     <div className="contact-form-container">
       <h2>Contact Us</h2>
       <form onSubmit={handleSubmit}>
@@ -62,6 +66,12 @@ const ContactForm = () => {
       </form>
       {responseMessage && <p className="response-message">{responseMessage}</p>}
     </div>
+
+    <footer className="privacy-policy-footer">
+        <p>&copy; 2024 W A L L I. All rights reserved.</p>
+      </footer>
+
+    </>
   );
 };
 

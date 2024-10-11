@@ -13,9 +13,11 @@ import SignUp from './components/SignUp';
 import ResetPassword from './components/ResetPassword'; 
 import ResetPasswordConfirm from './components/ResetPasswordConfirm'; 
 import ProfilePage from './components/ProfilePage';
+import PrivacyPolicy from './components/PrivacyPolicy'; 
+import DMCA_Copyright from './components/DMCA_Copyright';
 
 const App = () => {
-  const location = useLocation(); // useLocation should be inside App component
+  const location = useLocation(); 
   const [userInfo, setUserInfo] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -29,24 +31,31 @@ const App = () => {
     console.error('Google Sign-In Error:', error);
   };
 
-  // Updated to include '/profile'
-  const isAuthPage = 
-    location.pathname === '/upload' || 
-    location.pathname === '/signin' || 
-    location.pathname === '/signup' || 
-    location.pathname === '/reset-password' || 
-    location.pathname.includes('/reset-password-confirm') ||
-    location.pathname === '/profile';  // Exclude ProfilePage from rendering Navbar/Footer
+  // Normalize the pathname to lowercase for case-insensitive comparison
+  const currentPath = location.pathname.toLowerCase();
 
-  const isImagePage = location.pathname.includes('/image/');
-  const isContactPage = location.pathname === '/contact'; 
-  const isAboutPage = location.pathname === '/about'; 
+  // Separate check for the copyright page only
+  const isCopyrightPage = currentPath === '/copyright';
+
+  // General auth-related, image, contact, about pages condition
+  const isAuthPage = 
+    currentPath === '/upload' || 
+    currentPath === '/signin' || 
+    currentPath === '/signup' || 
+    currentPath === '/reset-password' || 
+    currentPath.includes('/reset-password-confirm') || 
+    currentPath === '/profile' || 
+    currentPath === '/privacy-policy' || 
+    currentPath === '/contact' || 
+    currentPath === '/about'; 
+
+  const isImagePage = currentPath.includes('/image/');
 
   return (
     <GoogleOAuthProvider clientId="813199410523-cc8t4holtdod284p9kcqqlbunb7rqdrt.apps.googleusercontent.com">
       <div>
-        {/* Render Navbar only if not on auth/image/contact/about/profile pages */}
-        {!isAuthPage && !isImagePage && !isContactPage && !isAboutPage && (
+        {/* Render Navbar only if not on auth/image/copyright pages */}
+        {!isAuthPage && !isImagePage && !isCopyrightPage && (
           <Navbar 
             userInfo={userInfo} 
             setUserInfo={setUserInfo} 
@@ -66,10 +75,12 @@ const App = () => {
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/reset-password-confirm/:uid/:token" element={<ResetPasswordConfirm />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/copyright" element={<DMCA_Copyright />} /> {/* Handle copyright separately */}
           </Routes>
         </div>
-        {/* Render Footer only if not on auth/image/contact/about/profile pages */}
-        {!isAuthPage && !isImagePage && !isContactPage && !isAboutPage && <Footer />}
+        {/* Render Footer only if not on auth/image/copyright pages */}
+        {!isAuthPage && !isImagePage && !isCopyrightPage && <Footer />}
       </div>
     </GoogleOAuthProvider>
   );

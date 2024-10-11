@@ -1,54 +1,57 @@
-/* AboutUs.css */
+
+
 .about-us-container {
-    max-width: 800px; /* Maximum width of the about us section */
-    margin: 0 auto; /* Center the content */
-    padding: 20px; /* Padding around the content */
-    background-color: #f9f9f9; /* Light background */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Shadow effect */
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  color: black;
+  background: #fff; /* White background for content */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+}
+
+.about-us-header {
+  background: #3e3e3e; /* Dark header */
+  color: #fff; /* White text */
+  padding: 10px 0;
+  text-align: center; /* Centered text */
+  border-radius: 8px 8px 0 0; /* Round top corners */
 }
 
 h1 {
-    text-align: center; /* Center the main heading */
-    color: #333; /* Dark text color */
-    margin-bottom: 20px; /* Space below the heading */
+  margin: 0;
+  font-size: 2.5rem; /* Adjusted size */
+}
+
+.about-us-content {
+  margin: 20px 0; /* Space between sections */
 }
 
 h2 {
-    color: #007BFF; /* Primary color for subheadings */
-    margin-top: 20px; /* Space above the subheading */
+  margin: 15px 0; /* Space around subheadings */
+  color: #3e3e3e; /* Dark subheading text */
+  font-size: 1.75rem; /* Adjusted size */
 }
 
-p {
-    line-height: 1.6; /* Improved readability */
-    margin-bottom: 15px; /* Space below paragraphs */
+.about-us-intro p,
+.about-us-vision p,
+.about-us-offer p,
+.about-us-commitment p,
+.about-us-join p,
+.about-us-contact p {
+  margin: 10px 0; /* Space between paragraphs */
+  color: black;
 }
 
 ul {
-    list-style-type: disc; /* Bulleted list */
-    margin-left: 20px; /* Space from the left */
+  list-style-type: disc; /* Disc style for list */
+  margin-left: 20px; /* Indent list */
 }
 
-.team-container {
-    display: flex; /* Flexbox for team members */
-    flex-wrap: wrap; /* Allow wrapping */
-    justify-content: space-around; /* Space between items */
-    margin-top: 20px; /* Space above team section */
-}
-
-.team-member {
-    background-color: #ffffff; /* White background for team members */
-    border-radius: 5px; /* Rounded corners */
-    padding: 15px; /* Padding inside team member box */
-    margin: 10px; /* Space around each member */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
-    flex: 1 1 200px; /* Flex properties for responsive layout */
-}
-
-.team-member h3 {
-    margin: 0; /* Remove margin from team member name */
-}
-
-.team-member p {
-    margin: 5px 0; /* Space for paragraphs in team member section */
+.about-us-footer {
+  text-align: center; /* Centered footer text */
+  padding: 10px 0; /* Space inside footer */
+  background: #3e3e3e; /* Dark footer background */
+  color: #fff; /* White text */
+  border-radius: 0 0 8px 8px; /* Round bottom corners */
 }

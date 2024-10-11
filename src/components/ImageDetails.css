@@ -1,38 +1,87 @@
-/* ImageDetails.css */
 .image-details-container {
-    display: flex;
-    align-items: center; /* Vertically center the items */
-    height: 100vh; /* Full viewport height */
-    overflow: hidden; /* Prevent overflow */
+  display: flex;
+  flex-direction: column; 
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto; 
+  max-width: 1200px; 
+  padding: 20px;
+  background-color: #534e4e; 
+  border-radius: 10px; 
+  box-shadow: 0 2px 10px rgba(66, 65, 65, 0.1); 
+}
+
+.image {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.details {
+  width: 100%;
+  margin-top: 20px;
+  padding-left: 100px;
+}
+
+.details h2 {
+  margin-bottom: 30px;
+  font-size: 24px;
+  color: #ffffff;
+}
+
+.details p {
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+.download-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.download-button:hover {
+  background-color: #0056b3;
+}
+
+
+@media (min-width: 768px) {
+  .image-details-container {
+    flex-direction: row; 
+    justify-content: space-between;
   }
-  
+
   .image {
-    max-width: 100%; /* Scale image to fit */
-    max-height: 100vh; /* Limit height to viewport */
-    object-fit: cover; /* Cover the area */
+    width: 50%;
+    margin-right: 20px; 
   }
-  
+
   .details {
-    margin-left: 20px; /* Space between image and details */
-    max-width: 300px; /* Optional: limit the width of the details section */
-    color: #333; /* Text color */
+    width: 50%; 
+    margin-top: 0;
   }
-  
-  h2 {
-    margin: 0; /* Remove default margin */
+}
+
+
+@media (max-width: 767px) {
+  .image {
+    max-width: 100%; 
   }
-  
+
+  .details h2 {
+    font-size: 20px;
+  }
+
+  .details p {
+    font-size: 16px;
+  }
+
   .download-button {
-    display: inline-block;
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    margin-top: 10px;
+    width: 100%;
   }
-  
-  .download-button:hover {
-    background-color: #0056b3;
-  }
-  
+}

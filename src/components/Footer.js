@@ -9,9 +9,9 @@ const Footer = () => {
         <div className="footer-links">
           <Link to="/about">About Us</Link> {/* Updated link to point to About Us page */}
           <Link to="/contact">Contact</Link>
-          <Link to="#">Privacy Policy</Link>
-          <Link to="#">Terms of Service</Link>
-          <Link to="#">Help</Link>
+          <Link to="/privacy-policy">Privacy Policy</Link> {/* Updated link to point to Privacy Policy page */}
+          <Link to="/Copyright">DMCA / Copyright</Link>
+          {/* <Link to="#">Help</Link> */}
         </div>
         <p className="footer-text">&copy; 2024 W A L L I All rights reserved.</p>
       </div>
