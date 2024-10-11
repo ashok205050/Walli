@@ -18,15 +18,7 @@ const DMCA_Copyright = () => {
 
           <section className="dmca-reporting">
             <h2>Reporting Copyright Infringement</h2>
-            <p>If you believe that your copyrighted work has been infringed on W A L L I, please send a notice to our Copyright Agent, providing the following information:</p>
-            <ul>
-              <li><strong>Signature:</strong> A physical or electronic signature of the authorized person.</li>
-              <li><strong>Copyright Identification:</strong> Identify the copyrighted work that has been infringed.</li>
-              <li><strong>Infringing Material:</strong> Specify the material you believe is infringing and provide sufficient information (like URL or item ID) to locate it.</li>
-              <li><strong>Contact Information:</strong> Provide your name, address, telephone number, and email.</li>
-              <li><strong>Good Faith Statement:</strong> A statement that you believe the use of the material is not authorized.</li>
-              <li><strong>Accuracy Statement:</strong> A statement that the information you provided is accurate and that you are authorized to act on behalf of the copyright owner.</li>
-            </ul>
+            <p>Just Contact me.</p>          
           </section>
 
           <section className="dmca-infringement-handling">

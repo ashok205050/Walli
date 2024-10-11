@@ -1,3 +1,4 @@
+// PrivacyPolicy.js
 import React from 'react';
 import './PrivacyPolicy.css'; // Ensure your CSS is linked here
 
@@ -12,60 +13,55 @@ const PrivacyPolicy = () => {
           <section className="privacy-policy-intro">
             <h2>Introduction</h2>
             <p>
-              At W A L L I, we value your privacy and are committed to protecting your personal information. This Privacy Policy outlines how we collect, use, disclose, and safeguard your information when you visit our website.
+              Welcome to W A L L I! Your privacy is super important to me, and I’m committed to protecting your personal information. This Privacy Policy explains what information I collect, how I use it, and how I keep it safe when you visit my site.
             </p>
           </section>
 
           <section className="privacy-policy-information">
-            <h2>Information We Collect</h2>
-            <p>We may collect information about you in a variety of ways, including:</p>
+            <h2>Information I Collect</h2>
+            <p>I may collect a few types of information, including:</p>
             <ul>
-              <li><strong>Personal Data:</strong> Information such as your name, email address, and contact details when you sign up for our services.</li>
-              <li><strong>Usage Data:</strong> Information on how you use our website, which may include your IP address, browser type, pages visited, and the time and date of your visits.</li>
-              <li><strong>Cookies:</strong> Our website may use cookies to enhance your experience. You can choose to accept or decline cookies in your browser settings.</li>
+              <li><strong>Personal Data:</strong> This includes things like your name and email when you sign up.</li>
+              <li><strong>Usage Data:</strong> Information on how you interact with the site, like your IP address, the pages you visit, and how long you stay.</li>
+              <li><strong>Cookies:</strong> I use cookies to make your experience better. You can decide whether to accept them in your browser settings.</li>
             </ul>
           </section>
 
           <section className="privacy-policy-use">
-            <h2>How We Use Your Information</h2>
-            <p>We may use the information we collect from you for various purposes, including:</p>
+            <h2>How I Use Your Information</h2>
+            <p>Your information helps me:</p>
             <ul>
-              <li>To provide and maintain our services.</li>
-              <li>To improve, personalize, and expand our website.</li>
-              <li>To understand and analyze how you use our website.</li>
-              <li>To communicate with you, including sending you updates and promotional materials.</li>
-              <li>To process your transactions and manage your orders.</li>
+              <li>Provide and maintain the site.</li>
+              <li>Make improvements and personalize your experience.</li>
+              <li>Understand how people are using the site.</li>
+              <li>Keep you updated with news and features.</li>
+              <li>Handle your transactions smoothly.</li>
             </ul>
           </section>
 
           <section className="privacy-policy-disclosure">
-            <h2>Disclosure of Your Information</h2>
-            <p>We do not sell or rent your personal information to third parties. We may share your information in the following circumstances:</p>
-            <ul>
-              <li>With service providers to facilitate our services.</li>
-              <li>To comply with legal obligations or protect our rights.</li>
-              <li>In connection with a merger, sale, or acquisition.</li>
-            </ul>
+            <h2>Sharing Your Information</h2>
+            <p>Your info is safe with me! I don’t sell or rent it to anyone.</p>
           </section>
 
           <section className="privacy-policy-security">
-            <h2>Security of Your Information</h2>
-            <p>We take the security of your personal information seriously and implement reasonable measures to protect it from unauthorized access, use, or disclosure. However, no method of transmission over the internet or method of electronic storage is 100% secure.</p>
+            <h2>Keeping Your Information Safe</h2>
+            <p>I take the security of your personal information seriously and use reasonable measures to keep it safe from unauthorized access. However, no online method is completely secure.</p>
           </section>
 
           <section className="privacy-policy-children">
             <h2>Children's Privacy</h2>
-            <p>Our services are not intended for children under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that we have collected personal information from a child, we will take steps to delete such information.</p>
+            <p>W A L L I isn’t intended for kids under 13. I don’t knowingly collect info from children. If I find out I have, I’ll delete it as soon as possible.</p>
           </section>
 
           <section className="privacy-policy-changes">
             <h2>Changes to This Privacy Policy</h2>
-            <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this Privacy Policy periodically for any changes.</p>
+            <p>I might update this Privacy Policy occasionally. If I do, I’ll post the new version here. Please check back from time to time to stay informed.</p>
           </section>
 
           <section className="privacy-policy-contact">
-            <h2>Contact Us</h2>
-            <p>If you have any questions about this Privacy Policy, please contact us at <strong>[Your Contact Information]</strong>.</p>
+            <h2>Contact Me</h2>
+            <p>If you have any questions about this Privacy Policy, feel free to reach out at <strong>[Your Contact Information]</strong>. I’m here to help!</p>
           </section>
         </div>
       </div>
