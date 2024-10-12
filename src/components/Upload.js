@@ -11,6 +11,7 @@ const Upload = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Check if user is authenticated
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -19,6 +20,7 @@ const Upload = () => {
     }
   }, [navigate]);
 
+  // Handle file selection
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith('image/')) {
@@ -29,6 +31,7 @@ const Upload = () => {
     }
   };
 
+  // Handle image upload and form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
