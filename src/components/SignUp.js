@@ -7,14 +7,16 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError(''); // Clear previous errors
+    setLoading(true); // Start loading state
 
     try {
-      const response = await fetch('http://localhost:8000/api/signup/', {
+      const response = await fetch("http://walli-django-production.up.railway.app/api/signup/", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -25,23 +27,22 @@ const SignUp = () => {
       if (response.ok) {
         const data = await response.json();
         alert(data.message); // Show success message
-        navigate('/signin'); // Redirect to sign-in page after successful signup
+        // Clear input fields
+        setUsername('');
+        setPassword('');
+        setEmail('');
+        // Redirect to sign-in page after successful signup
+        navigate('/signin');
       } else {
         const errorData = await response.json();
-        setError(errorData.error || 'An error occurred. Please try again.');
-
-        // Refresh the page after 2 seconds
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
+        console.error('Signup error:', errorData); // Log error for debugging
+        setError(errorData.error || 'An error occurred. Please try again.'); // Display error message
       }
     } catch (error) {
-      setError('Network error. Please try again.');
-      
-      // Refresh the page after 2 seconds
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      console.error('Network error:', error); // Log network errors
+      setError('Network error. Please try again.'); // Display network error message
+    } finally {
+      setLoading(false); // Stop loading state
     }
   };
 
@@ -70,8 +71,10 @@ const SignUp = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Sign Up</button>
-        {error && <p className="error">{error}</p>}
+        <button type="submit" disabled={loading}>
+          {loading ? 'Signing Up...' : 'Sign Up'}
+        </button>
+        {error && <p className="error">{error}</p>} {/* Display error if exists */}
       </form>
     </div>
   );

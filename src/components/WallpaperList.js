@@ -13,7 +13,7 @@ const WallpaperList = () => {
   // Fetch wallpapers based on the current category and search query
   const fetchWallpapers = async (category, search) => {
     setLoading(true);
-    let apiUrl = 'http://127.0.0.1:8000/api/wallpapers/';
+    let apiUrl = 'https://walli-django-production.up.railway.app/api/wallpapers/';
     const params = [];
 
     if (category !== 'all') {
