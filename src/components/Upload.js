@@ -54,7 +54,7 @@ const Upload = () => {
 
     try {
       // Correct endpoint for uploading images
-      const response = await fetch('https://your-backend-url.up.railway.app/api/wallpapers/', {
+      const response = await fetch('https://https://walli-django-production.up.railway.app/api/wallpapers/', {
         method: 'POST',
         body: formData,
         headers: {
