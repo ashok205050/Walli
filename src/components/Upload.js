@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { storage } from './firebaseConfig'; // Import your Firebase storage configuration
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const Upload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -9,7 +11,6 @@ const Upload = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Check if the user is authenticated when the component mounts
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -40,30 +41,33 @@ const Upload = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append('image', selectedFile);
-    formData.append('title', title);
-    formData.append('description', description);
-    formData.append('tags', tags);
-
-    // Log FormData for debugging
-    for (const pair of formData.entries()) {
-      console.log(`${pair[0]}, ${pair[1]}`);
-    }
-
+    // Step 1: Upload the file to Firebase
+    const storageRef = ref(storage, `wallpapers/${selectedFile.name}`);
     try {
-      // Correct endpoint for uploading images
+      await uploadBytes(storageRef, selectedFile);
+      const downloadURL = await getDownloadURL(storageRef); // Get the download URL
+
+      // Step 2: Prepare data to send to Django
+      const formData = {
+        image: downloadURL, // Use the download URL from Firebase
+        title,
+        description,
+        tags,
+      };
+
+      // Log data for debugging
+      console.log(formData);
+
+      // Send the data to your Django backend
       const response = await fetch('https://walli-django-production.up.railway.app/api/wallpapers/', {
         method: 'POST',
-        body: formData,
         headers: {
-          Authorization: `Bearer ${token}`, // Include the token in the request header
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify(formData), // Send as JSON
       });
 
-      // Log response status for debugging
-      console.log('Response status:', response.status);
-      
       if (response.status === 401) {
         alert('You are not authorized. Please log in again.');
         localStorage.removeItem('token');
@@ -73,11 +77,9 @@ const Upload = () => {
         navigate('/'); // Navigate back to the main page
       } else {
         const errorData = await response.json();
-        console.error('Error response:', errorData); // Log error details
         alert('Error uploading image: ' + JSON.stringify(errorData));
       }
     } catch (error) {
-      console.error('Fetch error:', error); // Log fetch error details
       alert('An error occurred: ' + error.message);
     } finally {
       setLoading(false);
@@ -87,10 +89,10 @@ const Upload = () => {
   return (
     <div className="upload-container">
       <h2>Upload an Image</h2>
-      {loading && <p>Uploading...</p>} {/* Show loading message */}
+      {loading && <p>Uploading...</p>}
       <form onSubmit={handleSubmit}>
         <input type="file" onChange={handleFileChange} required />
-        {selectedFile && <p>Selected File: {selectedFile.name}</p>} {/* Show selected file name */}
+        {selectedFile && <p>Selected File: {selectedFile.name}</p>}
         <input
           type="text"
           placeholder="Title"
@@ -109,7 +111,7 @@ const Upload = () => {
           value={tags}
           onChange={(e) => setTags(e.target.value)}
         />
-        <button type="submit" disabled={loading}>Upload</button> {/* Disable button during loading */}
+        <button type="submit" disabled={loading}>Upload</button>
       </form>
     </div>
   );
