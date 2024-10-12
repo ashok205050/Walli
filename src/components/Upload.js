@@ -52,7 +52,7 @@ const Upload = () => {
     }
 
     try {
-      // Corrected endpoint for uploading images
+      // Correct endpoint for uploading images
       const response = await fetch('https://walli-django-production.up.railway.app/api/wallpapers/', {
         method: 'POST',
         body: formData,
@@ -61,6 +61,9 @@ const Upload = () => {
         },
       });
 
+      // Log response status for debugging
+      console.log('Response status:', response.status);
+      
       if (response.status === 401) {
         alert('You are not authorized. Please log in again.');
         localStorage.removeItem('token');
@@ -70,9 +73,11 @@ const Upload = () => {
         navigate('/'); // Navigate back to the main page
       } else {
         const errorData = await response.json();
+        console.error('Error response:', errorData); // Log error details
         alert('Error uploading image: ' + JSON.stringify(errorData));
       }
     } catch (error) {
+      console.error('Fetch error:', error); // Log fetch error details
       alert('An error occurred: ' + error.message);
     } finally {
       setLoading(false);
