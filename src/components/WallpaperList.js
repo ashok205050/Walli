@@ -6,7 +6,7 @@ const WallpaperList = () => {
   const location = useLocation();
   const [wallpapers, setWallpapers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(24); // Start with 20 wallpapers
+  const [visibleCount, setVisibleCount] = useState(24); // Start with 24 wallpapers
   const [selectedCategory, setSelectedCategory] = useState('all'); // Used for potential future functionality
   const [searchQuery, setSearchQuery] = useState(''); // Used for potential future functionality
 
@@ -33,10 +33,11 @@ const WallpaperList = () => {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      
+
       // Log the fetched wallpapers to check the response
       console.log(data.results); // Log results to verify response structure
 
+      // Ensure the wallpaper data includes the Firebase URLs for images
       setWallpapers(data.results || []); // Store fetched wallpapers
     } catch (error) {
       console.error("Error fetching wallpapers:", error);
@@ -76,7 +77,7 @@ const WallpaperList = () => {
       {wallpapers.slice(0, visibleCount).map((wallpaper) => (
         <div className="wallpaper-item" key={wallpaper.id}>
           <Link to={`/image/${wallpaper.id}`}>
-            <img src={wallpaper.image} alt={wallpaper.title} />
+            <img src={wallpaper.imageUrl} alt={wallpaper.title} /> {/* Updated to use imageUrl */}
           </Link>
         </div>
       ))}

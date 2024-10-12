@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { storage } from '../firebaseConfig'; // Import Firebase storage
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const Upload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -23,27 +25,40 @@ const Upload = () => {
     e.preventDefault();
     setLoading(true);
 
-    const formData = new FormData();
-    formData.append('image', selectedFile);
-    formData.append('title', title);
-    formData.append('description', description);
-    formData.append('tags', tags); // Append tags to formData
+    if (!selectedFile) {
+      alert('Please select a file before submitting.');
+      setLoading(false);
+      return;
+    }
 
     try {
-      const response = await fetch('http://localhost:8000/api/wallpapers/upload/', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      const storageRef = ref(storage, `images/${selectedFile.name}`); // Create a reference to the file
+      await uploadBytes(storageRef, selectedFile); // Upload the file
 
-      if (response.ok) {
-        alert('Image uploaded successfully!');
-        navigate('/'); // Navigate back to the main page
-      } else {
-        alert('Error uploading image');
-      }
+      // Get the download URL
+      const downloadURL = await getDownloadURL(storageRef);
+
+      // Prepare the wallpaper data (you can adjust this based on your API)
+      const wallpaperData = {
+        title,
+        description,
+        tags: tags.split(',').map(tag => tag.trim()), // Split and trim tags
+        imageUrl: downloadURL, // URL of the uploaded image
+      };
+
+      // Here you can send wallpaperData to your backend API if needed
+      // Example:
+      // const response = await fetch('http://localhost:8000/api/wallpapers/upload/', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     Authorization: `Bearer ${localStorage.getItem('token')}`,
+      //   },
+      //   body: JSON.stringify(wallpaperData),
+      // });
+
+      alert('Image uploaded successfully!');
+      navigate('/'); // Navigate back to the main page
     } catch (error) {
       alert('An error occurred: ' + error.message);
     } finally {
