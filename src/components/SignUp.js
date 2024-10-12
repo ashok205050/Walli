@@ -16,7 +16,8 @@ const SignUp = () => {
     setLoading(true); // Start loading state
 
     try {
-      const response = await fetch("http://walli-django-production.up.railway.app/api/signup/", {
+      // Updated to use HTTPS
+      const response = await fetch("https://walli-django-production.up.railway.app/api/signup/", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

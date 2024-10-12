@@ -35,7 +35,7 @@ const SignIn = () => {
     e.preventDefault();
 
     // API call for login
-    fetch('http://walli-django-production.up.railway.app/api/login/', { // Use the full URL to your backend
+    fetch('https://walli-django-production.up.railway.app/api/login/', { // Use the full URL to your backend
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
