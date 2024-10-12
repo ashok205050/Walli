@@ -11,7 +11,6 @@ const Upload = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Check if user is authenticated
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -20,7 +19,6 @@ const Upload = () => {
     }
   }, [navigate]);
 
-  // Handle file selection
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith('image/')) {
@@ -31,7 +29,6 @@ const Upload = () => {
     }
   };
 
-  // Handle image upload and form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -72,7 +69,10 @@ const Upload = () => {
       });
 
       // Check response status
+      console.log('Response status:', response.status); // Log the response status
       if (response.status === 401) {
+        const errorMessage = await response.text(); // Get the error message from the response
+        console.error('Error response:', errorMessage); // Log the error message in the console
         alert('You are not authorized. Please log in again.');
         localStorage.removeItem('token'); // Clear token if unauthorized
         navigate('/login');
