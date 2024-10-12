@@ -56,21 +56,22 @@ const Upload = () => {
       };
 
       // Log data for debugging
-      console.log(formData);
+      console.log('Data to be sent to backend:', formData);
 
       // Send the data to your Django backend
       const response = await fetch('https://walli-django-production.up.railway.app/api/wallpapers/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, // Include the authorization token
         },
         body: JSON.stringify(formData), // Send as JSON
       });
 
+      // Check response status
       if (response.status === 401) {
         alert('You are not authorized. Please log in again.');
-        localStorage.removeItem('token');
+        localStorage.removeItem('token'); // Clear token if unauthorized
         navigate('/login');
       } else if (response.ok) {
         alert('Image uploaded successfully!');
@@ -89,10 +90,10 @@ const Upload = () => {
   return (
     <div className="upload-container">
       <h2>Upload an Image</h2>
-      {loading && <p>Uploading...</p>}
+      {loading && <p>Uploading...</p>} {/* Show loading message */}
       <form onSubmit={handleSubmit}>
         <input type="file" onChange={handleFileChange} required />
-        {selectedFile && <p>Selected File: {selectedFile.name}</p>}
+        {selectedFile && <p>Selected File: {selectedFile.name}</p>} {/* Show selected file name */}
         <input
           type="text"
           placeholder="Title"
@@ -111,7 +112,7 @@ const Upload = () => {
           value={tags}
           onChange={(e) => setTags(e.target.value)}
         />
-        <button type="submit" disabled={loading}>Upload</button>
+        <button type="submit" disabled={loading}>Upload</button> {/* Disable button during loading */}
       </form>
     </div>
   );
