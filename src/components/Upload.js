@@ -5,8 +5,8 @@ const Upload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [tags, setTags] = useState(''); // State for tags
-  const [loading, setLoading] = useState(false); // Loading state
+  const [tags, setTags] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   // Check if the user is authenticated when the component mounts
@@ -14,7 +14,7 @@ const Upload = () => {
     const token = localStorage.getItem('token');
     if (!token) {
       alert('You need to be logged in to upload images.');
-      navigate('/login'); // Redirect to login if not authenticated
+      navigate('/login');
     }
   }, [navigate]);
 
@@ -30,31 +30,30 @@ const Upload = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Set loading state
+    setLoading(true);
 
-    // Retrieve the token from localStorage
     const token = localStorage.getItem('token');
     if (!token) {
       alert('You need to be logged in to upload images.');
-      setLoading(false); // Reset loading state
-      navigate('/login'); // Redirect to login if not authenticated
-      return; // Exit the function if the user is not authenticated
+      setLoading(false);
+      navigate('/login');
+      return;
     }
 
     const formData = new FormData();
     formData.append('image', selectedFile);
     formData.append('title', title);
     formData.append('description', description);
-    formData.append('tags', tags); // Append tags to form data
+    formData.append('tags', tags);
 
     // Log FormData for debugging
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ', ' + pair[1]);
+    for (const pair of formData.entries()) {
+      console.log(`${pair[0]}, ${pair[1]}`);
     }
 
     try {
-      // Correct endpoint for uploading images
-      const response = await fetch('https://https://walli-django-production.up.railway.app/api/wallpapers/', {
+      // Corrected endpoint for uploading images
+      const response = await fetch('https://walli-django-production.up.railway.app/api/wallpapers/', {
         method: 'POST',
         body: formData,
         headers: {
@@ -64,19 +63,19 @@ const Upload = () => {
 
       if (response.status === 401) {
         alert('You are not authorized. Please log in again.');
-        localStorage.removeItem('token'); // Clear token on unauthorized access
-        navigate('/login'); // Redirect to login if unauthorized
+        localStorage.removeItem('token');
+        navigate('/login');
       } else if (response.ok) {
         alert('Image uploaded successfully!');
         navigate('/'); // Navigate back to the main page
       } else {
-        const errorData = await response.json(); // Get error details
-        alert('Error uploading image: ' + JSON.stringify(errorData)); // Show error message
+        const errorData = await response.json();
+        alert('Error uploading image: ' + JSON.stringify(errorData));
       }
     } catch (error) {
       alert('An error occurred: ' + error.message);
     } finally {
-      setLoading(false); // Reset loading state
+      setLoading(false);
     }
   };
 
