@@ -89,7 +89,7 @@ const Upload = () => {
         alert('Error uploading image: ' + JSON.stringify(errorData));
       }
     } catch (error) {
-      console.error('Upload error:', error);
+      console.error('Upload error:', error); // Log the error for better debugging
       alert('An error occurred: ' + error.message);
     } finally {
       setLoading(false); // Hide loading state
