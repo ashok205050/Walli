@@ -16,8 +16,6 @@ const Upload = () => {
     if (!token) {
       alert('You need to be logged in to upload images.');
       navigate('/login');
-    } else {
-      console.log('User is logged in, token found.');
     }
   }, [navigate]);
 
@@ -25,7 +23,6 @@ const Upload = () => {
     const file = e.target.files[0];
     if (file && file.type.startsWith('image/')) {
       setSelectedFile(file);
-      console.log('File selected:', file.name);
     } else {
       alert('Please select a valid image file.');
       setSelectedFile(null);
@@ -41,7 +38,6 @@ const Upload = () => {
     }
 
     setLoading(true); // Show loading state
-    console.log('Starting upload process...');
 
     const token = localStorage.getItem('token');
     if (!token) {
@@ -51,14 +47,22 @@ const Upload = () => {
       return;
     }
 
+    // Optional: Decode and check token expiry
+    const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT token
+    if (payload.exp * 1000 < Date.now()) {
+      alert('Your session has expired. Please log in again.');
+      localStorage.removeItem('token'); // Clear expired token
+      navigate('/login');
+      return;
+    }
+
+    console.log('Token being sent:', token); // Log the token
+
     // Step 1: Upload the file to Firebase
     const storageRef = ref(storage, `wallpapers/${selectedFile.name}`);
     try {
-      console.log('Uploading file to Firebase:', selectedFile.name);
       await uploadBytes(storageRef, selectedFile);
-      console.log('File uploaded successfully, getting download URL...');
       const downloadURL = await getDownloadURL(storageRef); // Get the download URL
-      console.log('Download URL:', downloadURL); // Log the download URL
 
       // Step 2: Prepare data to send to Django
       const formData = {
@@ -84,7 +88,7 @@ const Upload = () => {
       // Handle the response
       if (response.status === 401) {
         const errorMessage = await response.text();
-        console.error('Error response (401):', errorMessage); // Log the error message in the console
+        console.error('Error response:', errorMessage); // Log the error message in the console
         alert('You are not authorized. Please log in again.');
         localStorage.removeItem('token'); // Clear token if unauthorized
         navigate('/login');
@@ -93,7 +97,6 @@ const Upload = () => {
         navigate('/'); // Navigate back to the main page
       } else {
         const errorData = await response.json();
-        console.error('Error response:', errorData); // Log full error response for debugging
         alert('Error uploading image: ' + JSON.stringify(errorData));
       }
     } catch (error) {
@@ -101,7 +104,6 @@ const Upload = () => {
       alert('An error occurred: ' + error.message);
     } finally {
       setLoading(false); // Hide loading state
-      console.log('Upload process completed.');
     }
   };
 
