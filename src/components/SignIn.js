@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode} from 'jwt-decode'; // Correct import for jwtDecode
+import jwtDecode from 'jwt-decode'; // Correct import for jwtDecode
 import './SignIn.css';
 
 const SignIn = () => {
@@ -19,6 +19,10 @@ const SignIn = () => {
     localStorage.setItem('userInfo', JSON.stringify(decoded));
     localStorage.setItem('username', decoded.name || decoded.email.split('@')[0]); // Save username in local storage
     localStorage.setItem('token', token); // Save token in local storage
+
+    // Optionally store refresh token here (depending on backend response)
+    // localStorage.setItem('refresh_token', response.refresh_token);
+
     setSuccessMessage('Login Successful!');
     setTimeout(() => {
       navigate('/'); // Redirect to home page after 2 seconds
@@ -53,9 +57,13 @@ const SignIn = () => {
         if (!data.userInfo) {
           throw new Error('No user info received from server');
         }
-        localStorage.setItem('userInfo', JSON.stringify(data.userInfo)); // Save user info to local storage
-        localStorage.setItem('username', data.userInfo.username || identifier.split('@')[0]); // Save the username returned from the server
-        localStorage.setItem('token', data.token); // Store the token in local storage
+
+        // Save user info and tokens to local storage
+        localStorage.setItem('userInfo', JSON.stringify(data.userInfo));
+        localStorage.setItem('username', data.userInfo.username || identifier.split('@')[0]);
+        localStorage.setItem('token', data.token); // Save access token
+        localStorage.setItem('refresh_token', data.refresh_token); // Save refresh token if provided by the backend
+
         setSuccessMessage('Login Successful!');
         setTimeout(() => {
           navigate('/'); // Redirect to home page after 2 seconds
@@ -85,18 +93,18 @@ const SignIn = () => {
           onChange={(e) => setIdentifier(e.target.value)} // Update state for identifier
           required
         />
-          <div className="password-container">
-            <input
-              type={showPassword ? 'text' : 'password'} // Change input type based on showPassword state
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <button type="button" className="toggle-password" onClick={togglePasswordVisibility}>
-              {showPassword ? 'Hide' : 'Show'}
-            </button>
-          </div>
+        <div className="password-container">
+          <input
+            type={showPassword ? 'text' : 'password'} // Change input type based on showPassword state
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="button" className="toggle-password" onClick={togglePasswordVisibility}>
+            {showPassword ? 'Hide' : 'Show'}
+          </button>
+        </div>
         <button className='signin-button' type="submit">Sign In</button>
       </form>
 
@@ -106,7 +114,6 @@ const SignIn = () => {
       <p>Don't have an account? <button className='button' onClick={() => navigate('/signup')}>Sign Up</button></p>
       <p>Forgot your password? <button className='button' onClick={() => navigate('/reset-password')}>Reset Password</button></p>
 
-      
       <GoogleLogin
         onSuccess={handleLoginSuccess}
         onError={handleLoginError}

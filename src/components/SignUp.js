@@ -16,7 +16,6 @@ const SignUp = () => {
     setLoading(true); // Start loading state
 
     try {
-      // Updated to use HTTPS
       const response = await fetch("https://walli-django-production.up.railway.app/api/signup/", {
         method: 'POST',
         headers: {
@@ -27,6 +26,12 @@ const SignUp = () => {
 
       if (response.ok) {
         const data = await response.json();
+
+        // Check if token is in the response and store it in localStorage
+        if (data.token) {
+          localStorage.setItem('token', data.token); // Store token in localStorage
+        }
+
         alert(data.message); // Show success message
         // Clear input fields
         setUsername('');

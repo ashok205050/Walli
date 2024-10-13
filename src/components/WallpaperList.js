@@ -28,10 +28,18 @@ const WallpaperList = () => {
     }
 
     try {
-      const response = await fetch(apiUrl);
+      const accessToken = localStorage.getItem('access_token'); // Get access token from local storage
+      const response = await fetch(apiUrl, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`, // Add the token to the request headers
+          'Content-Type': 'application/json',
+        },
+      });
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+
       const data = await response.json();
 
       // Log the fetched wallpapers to check the response
