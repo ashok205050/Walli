@@ -11,6 +11,9 @@ const ImageDetails = () => {
     const fetchWallpaperDetails = async () => {
       try {
         const response = await fetch(`https://walli-django-production.up.railway.app/api/wallpapers/${id}/`);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
         const data = await response.json();
         setWallpaper(data);
       } catch (error) {
@@ -37,7 +40,7 @@ const ImageDetails = () => {
     // Create a link element
     const link = document.createElement('a');
     link.href = wallpaper.image; // The URL of the image
-    link.setAttribute('download', wallpaper.title); // Specify a download filename
+    link.setAttribute('download', wallpaper.title || 'download'); // Specify a download filename, default to 'download'
     document.body.appendChild(link); // Append to body
     link.click(); // Trigger a click to download
     document.body.removeChild(link); // Remove the link from the DOM
@@ -52,7 +55,7 @@ const ImageDetails = () => {
         {wallpaper.description && (
           <p><strong>Description:</strong> {wallpaper.description}</p>
         )}
-        <p><strong>Uploaded At:</strong> {new Date(wallpaper.uploaded_at).toLocaleString()}</p> {/* Display upload time */}
+        <p><strong>Uploaded At:</strong> {new Date(wallpaper.uploaded_at).toLocaleString()}</p>
         <p>
           <strong>Uploaded By:</strong> 
           {wallpaper.uploaded_by && (
