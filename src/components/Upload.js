@@ -37,9 +37,9 @@ const Upload = () => {
       await uploadBytes(storageRef, selectedFile); // Upload the image to Firebase
       const downloadURL = await getDownloadURL(storageRef); // Get the download URL
 
-      // Step 2: Prepare data to send to Django
+      // Step 2: Prepare data to send to Django backend
       const formData = {
-        image: downloadURL, // Use the download URL from Firebase
+        image: downloadURL,  // Firebase URL for image
         title,
         description,
         tags,
@@ -47,28 +47,27 @@ const Upload = () => {
 
       console.log('Data to be sent to backend:', formData); // Log data for debugging
 
-      // Step 3: Send the data to your Django backend
+      // Step 3: Send data to Django backend
       const response = await fetch('https://walli-django-production.up.railway.app/api/wallpapers/', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json', // Set content type as JSON
+          'Content-Type': 'application/json',  // Expect JSON payload
         },
-        body: JSON.stringify(formData), // Send as JSON
+        body: JSON.stringify(formData),  // Send formData as JSON
       });
 
-      // Handle the response
       if (response.ok) {
         alert('Image uploaded successfully!'); // Show success message
-        navigate('/'); // Navigate back to the main page
+        navigate('/');  // Navigate back to the main page
       } else {
         const errorData = await response.json();
-        alert('Error uploading image: ' + JSON.stringify(errorData)); // Handle errors
+        alert('Error uploading image: ' + JSON.stringify(errorData));  // Handle errors
       }
     } catch (error) {
-      console.error('Upload error:', error); // Log the error for better debugging
-      alert('An error occurred: ' + error.message); // Show error message
+      console.error('Upload error:', error);  // Log the error for debugging
+      alert('An error occurred: ' + error.message);  // Show error message
     } finally {
-      setLoading(false); // Hide loading state
+      setLoading(false);  // Hide loading state
     }
   };
 
