@@ -52,7 +52,7 @@ const App = () => {
   const isImagePage = currentPath.includes('/image/');
 
   return (
-    <GoogleOAuthProvider clientId="813199410523-cc8t4holtdod284p9kcqqlbunb7rqdrt.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="641871387261-jfjirnl5fo0a76nrvshjbee5cn818cns.apps.googleusercontent.com">
       <div>
         {/* Render Navbar only if not on auth/image/copyright pages */}
         {!isAuthPage && !isImagePage && !isCopyrightPage && (
