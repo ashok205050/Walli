@@ -1,124 +1,67 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { storage } from './firebaseConfig'; // Import your Firebase storage configuration
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+// upload.js
+import React, { useState } from "react";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from "./firebaseConfig"; // Import Firebase storage
 
-const Upload = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [tags, setTags] = useState('');
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+const UploadImage = () => {
+    const [file, setFile] = useState(null);
+    const [uploading, setUploading] = useState(false);
+    const [downloadURL, setDownloadURL] = useState("");
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      alert('You need to be logged in to upload images.');
-      navigate('/login');
-    }
-  }, [navigate]);
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]); // Capture the selected file
+    };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.type.startsWith('image/')) {
-      setSelectedFile(file);
-    } else {
-      alert('Please select a valid image file.');
-      setSelectedFile(null);
-    }
-  };
+    const handleUpload = () => {
+        if (!file) {
+            alert("Please select a file first!");
+            return;
+        }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+        const storageRef = ref(storage, `images/${file.name}`); // Create a reference in Firebase Storage
+        const uploadTask = uploadBytesResumable(storageRef, file);
 
-    const token = localStorage.getItem('token');
-    if (!token) {
-      alert('You need to be logged in to upload images.');
-      setLoading(false);
-      navigate('/login');
-      return;
-    }
+        setUploading(true); // Set uploading state to true
 
-    // Step 1: Upload the file to Firebase
-    const storageRef = ref(storage, `wallpapers/${selectedFile.name}`);
-    try {
-      await uploadBytes(storageRef, selectedFile);
-      const downloadURL = await getDownloadURL(storageRef); // Get the download URL
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+                // Handle progress, if you want to show the upload percentage
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log("Upload is " + progress + "% done");
+            },
+            (error) => {
+                console.error("Upload failed:", error);
+                setUploading(false); // Reset uploading state if error occurs
+            },
+            () => {
+                // When the upload completes successfully
+                getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                    console.log("File available at", url);
+                    setDownloadURL(url); // Set the download URL
+                    setUploading(false); // Reset uploading state
+                });
+            }
+        );
+    };
 
-      // Step 2: Prepare data to send to Django
-      const formData = {
-        image: downloadURL, // Use the download URL from Firebase
-        title,
-        description,
-        tags,
-      };
-
-      // Log data for debugging
-      console.log('Data to be sent to backend:', formData);
-
-      // Send the data to your Django backend
-      const response = await fetch('https://walli-django-production.up.railway.app/api/wallpapers/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Include the authorization token
-        },
-        body: JSON.stringify(formData), // Send as JSON
-      });
-
-      // Check response status
-      console.log('Response status:', response.status); // Log the response status
-      if (response.status === 401) {
-        const errorMessage = await response.text(); // Get the error message from the response
-        console.error('Error response:', errorMessage); // Log the error message in the console
-        alert('You are not authorized. Please log in again.');
-        localStorage.removeItem('token'); // Clear token if unauthorized
-        navigate('/login');
-      } else if (response.ok) {
-        alert('Image uploaded successfully!');
-        navigate('/'); // Navigate back to the main page
-      } else {
-        const errorData = await response.json();
-        alert('Error uploading image: ' + JSON.stringify(errorData));
-      }
-    } catch (error) {
-      alert('An error occurred: ' + error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="upload-container">
-      <h2>Upload an Image</h2>
-      {loading && <p>Uploading...</p>} {/* Show loading message */}
-      <form onSubmit={handleSubmit}>
-        <input type="file" onChange={handleFileChange} required />
-        {selectedFile && <p>Selected File: {selectedFile.name}</p>} {/* Show selected file name */}
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
-        <textarea
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        ></textarea>
-        <input
-          type="text"
-          placeholder="Tags (comma-separated)"
-          value={tags}
-          onChange={(e) => setTags(e.target.value)}
-        />
-        <button type="submit" disabled={loading}>Upload</button> {/* Disable button during loading */}
-      </form>
-    </div>
-  );
+    return (
+        <div>
+            <h3>Upload Image</h3>
+            <input type="file" accept="image/*" onChange={handleFileChange} />
+            <button onClick={handleUpload} disabled={uploading}>
+                {uploading ? "Uploading..." : "Upload"}
+            </button>
+            {downloadURL && (
+                <div>
+                    <p>Uploaded Image URL:</p>
+                    <a href={downloadURL} target="_blank" rel="noopener noreferrer">
+                        {downloadURL}
+                    </a>
+                </div>
+            )}
+        </div>
+    );
 };
 
-export default Upload;
+export default UploadImage;

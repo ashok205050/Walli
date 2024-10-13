@@ -15,6 +15,7 @@ import ResetPasswordConfirm from './components/ResetPasswordConfirm';
 import ProfilePage from './components/ProfilePage';
 import PrivacyPolicy from './components/PrivacyPolicy'; 
 import DMCA_Copyright from './components/DMCA_Copyright';
+import UploadImage from "./upload";
 
 const App = () => {
   const location = useLocation(); 
@@ -77,6 +78,7 @@ const App = () => {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/copyright" element={<DMCA_Copyright />} /> {/* Handle copyright separately */}
+            <UploadImage />
           </Routes>
         </div>
         {/* Render Footer only if not on auth/image/copyright pages */}

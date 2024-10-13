@@ -1,7 +1,9 @@
+// firebaseConfig.js
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
+// Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyBS3NxKb92CfJKpAYEuUfkIXEjfd8mG-Cs",
     authDomain: "walli-d2154.firebaseapp.com",
@@ -12,6 +14,9 @@ const firebaseConfig = {
     measurementId: "G-VXWK3T8GPY"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+// Export storage and auth
 export const storage = getStorage(app);
 export const auth = getAuth(app);
