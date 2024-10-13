@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { storage } from './firebaseConfig'; // Import your Firebase storage configuration
+import { storage } from './firebaseConfig';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const Upload = () => {
@@ -15,7 +15,7 @@ const Upload = () => {
     const token = localStorage.getItem('token');
     if (!token) {
       alert('You need to be logged in to upload images.');
-      navigate('/login');
+      navigate('/signin');
     }
   }, [navigate]);
 
@@ -37,7 +37,7 @@ const Upload = () => {
       return;
     }
 
-    setLoading(true); // Show loading state
+    setLoading(true);
 
     const token = localStorage.getItem('token');
     if (!token) {
@@ -47,32 +47,38 @@ const Upload = () => {
       return;
     }
 
-    // Optional: Decode and check token expiry
-    const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT token
-    if (payload.exp * 1000 < Date.now()) {
-      alert('Your session has expired. Please log in again.');
-      localStorage.removeItem('token'); // Clear expired token
+    // Decode and check token expiry
+    if (token.split('.').length === 3) { // Ensure it's a valid JWT
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      if (payload.exp * 1000 < Date.now()) {
+        alert('Your session has expired. Please log in again.');
+        localStorage.removeItem('token');
+        navigate('/login');
+        return;
+      }
+    } else {
+      alert('Invalid token. Please log in again.');
+      localStorage.removeItem('token');
       navigate('/login');
       return;
     }
 
-    console.log('Token being sent:', token); // Log the token
+    console.log('Token being sent:', token);
 
     // Step 1: Upload the file to Firebase
     const storageRef = ref(storage, `wallpapers/${selectedFile.name}`);
     try {
       await uploadBytes(storageRef, selectedFile);
-      const downloadURL = await getDownloadURL(storageRef); // Get the download URL
+      const downloadURL = await getDownloadURL(storageRef);
 
       // Step 2: Prepare data to send to Django
       const formData = {
-        image: downloadURL, // Use the download URL from Firebase
+        image: downloadURL,
         title,
         description,
         tags,
       };
 
-      // Log data for debugging
       console.log('Data to be sent to backend:', formData);
 
       // Step 3: Send the data to your Django backend
@@ -80,40 +86,37 @@ const Upload = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Include the authorization token
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData), // Send as JSON
+        body: JSON.stringify(formData),
       });
 
-      // Handle the response
       if (response.status === 401) {
-        const errorMessage = await response.text();
-        console.error('Error response:', errorMessage); // Log the error message in the console
         alert('You are not authorized. Please log in again.');
-        localStorage.removeItem('token'); // Clear token if unauthorized
+        localStorage.removeItem('token');
         navigate('/login');
       } else if (response.ok) {
         alert('Image uploaded successfully!');
-        navigate('/'); // Navigate back to the main page
+        navigate('/');
       } else {
         const errorData = await response.json();
         alert('Error uploading image: ' + JSON.stringify(errorData));
       }
     } catch (error) {
-      console.error('Upload error:', error); // Log the error for better debugging
+      console.error('Upload error:', error);
       alert('An error occurred: ' + error.message);
     } finally {
-      setLoading(false); // Hide loading state
+      setLoading(false);
     }
   };
 
   return (
     <div className="upload-container">
       <h2>Upload an Image</h2>
-      {loading && <p>Uploading...</p>} {/* Show loading message */}
+      {loading && <p>Uploading...</p>}
       <form onSubmit={handleSubmit}>
         <input type="file" onChange={handleFileChange} required />
-        {selectedFile && <p>Selected File: {selectedFile.name}</p>} {/* Show selected file name */}
+        {selectedFile && <p>Selected File: {selectedFile.name}</p>}
         <input
           type="text"
           placeholder="Title"
@@ -132,7 +135,7 @@ const Upload = () => {
           value={tags}
           onChange={(e) => setTags(e.target.value)}
         />
-        <button type="submit" disabled={loading}>Upload</button> {/* Disable button during loading */}
+        <button type="submit" disabled={loading}>Upload</button>
       </form>
     </div>
   );
