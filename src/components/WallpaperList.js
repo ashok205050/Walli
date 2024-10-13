@@ -16,37 +16,37 @@ const WallpaperList = () => {
     const params = [];
 
     if (category !== 'all') {
-      params.push(`category=${category}`);
+        params.push(`category=${category}`);
     }
     if (search) {
-      params.push(`search=${search}`);
+        params.push(`search=${search}`);
     }
 
     if (params.length > 0) {
-      apiUrl += '?' + params.join('&');
+        apiUrl += '?' + params.join('&');
     }
 
     try {
-      const accessToken = localStorage.getItem('access_token'); 
-      const response = await fetch(apiUrl, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
+        const response = await fetch(apiUrl, {
+            // Remove Authorization header for public access
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
+        if (!response.ok) {
+            throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+        }
 
-      const data = await response.json();
-      setWallpapers(data.results || []); // Store fetched wallpapers
+        const data = await response.json();
+        setWallpapers(data.results || []); 
     } catch (error) {
-      console.error("Error fetching wallpapers:", error);
+        console.error("Error fetching wallpapers:", error);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
+
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
