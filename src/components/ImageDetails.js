@@ -39,15 +39,17 @@ const ImageDetails = () => {
 
     // Check if the wallpaper image URL is valid
     if (!wallpaper.image) {
-        console.error("Image URL is not valid.");
-        return;
+      console.error("Image URL is not valid.");
+      return;
     }
 
-    // Create a link element
+    // Create a link element for downloading the image
     const link = document.createElement('a');
-    link.href = wallpaper.image; // The URL of the image
+    link.href = wallpaper.image; // The URL of the image from Firebase
     link.setAttribute('download', wallpaper.title || 'download'); // Specify a download filename
+    document.body.appendChild(link); // Append to body to make the link clickable
     link.click(); // Trigger a click to download
+    document.body.removeChild(link); // Remove the link from the DOM after clicking
   };
 
   return (
