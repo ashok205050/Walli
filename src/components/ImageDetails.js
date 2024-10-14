@@ -46,14 +46,12 @@ const ImageDetails = () => {
     // Create a link element for downloading the image
     const link = document.createElement('a');
     link.href = wallpaper.image; // The URL of the image from Firebase
-    link.setAttribute('download', wallpaper.title || 'download'); // Specify a download filename
-    document.body.appendChild(link); // Append to body to make the link clickable
+    link.download = wallpaper.title || 'download'; // Specify a download filename
+
+    // Append to the body to make the link clickable
+    document.body.appendChild(link);
     link.click(); // Trigger a click to download
-    
-    // Remove the link after a short delay to ensure the click event is processed
-    setTimeout(() => {
-      document.body.removeChild(link); // Remove the link from the DOM after clicking
-    }, 100);
+    document.body.removeChild(link); // Remove the link from the DOM after clicking
   };
 
   return (
