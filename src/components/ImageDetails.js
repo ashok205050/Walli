@@ -34,7 +34,7 @@ const ImageDetails = () => {
     return <p>Wallpaper not found.</p>;
   }
 
-  const handleDownload = async (e) => {
+  const handleDownload = (e) => {
     e.preventDefault(); // Prevent default action
 
     // Check if the wallpaper image URL is valid
@@ -43,28 +43,13 @@ const ImageDetails = () => {
       return;
     }
 
-    // Fetch the image to ensure it's accessible before downloading
-    try {
-      const response = await fetch(wallpaper.image);
-      if (!response.ok) {
-        throw new Error("Failed to fetch the image.");
-      }
-
-      // Create a blob from the response
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-
-      // Create a link element for downloading the image
-      const link = document.createElement('a');
-      link.href = url; // Use the blob URL
-      link.setAttribute('download', wallpaper.title || 'download'); // Specify a download filename
-      document.body.appendChild(link); // Append to body to make the link clickable
-      link.click(); // Trigger a click to download
-      document.body.removeChild(link); // Remove the link from the DOM after clicking
-      window.URL.revokeObjectURL(url); // Free up memory
-    } catch (error) {
-      console.error("Error downloading the image:", error);
-    }
+    // Create a link element for downloading the image
+    const link = document.createElement('a');
+    link.href = wallpaper.image; // Directly use the image URL from Firebase
+    link.setAttribute('download', wallpaper.title || 'download'); // Specify a download filename
+    document.body.appendChild(link); // Append to body to make the link clickable
+    link.click(); // Trigger a click to download
+    document.body.removeChild(link); // Remove the link from the DOM after clicking
   };
 
   return (
