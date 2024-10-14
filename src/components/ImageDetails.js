@@ -37,15 +37,18 @@ const ImageDetails = () => {
   const handleDownload = (e) => {
     e.preventDefault(); // Prevent default action
 
+    // Check if the wallpaper image URL is valid
+    if (!wallpaper.image) {
+        console.error("Image URL is not valid.");
+        return;
+    }
+
     // Create a link element
     const link = document.createElement('a');
     link.href = wallpaper.image; // The URL of the image
     link.setAttribute('download', wallpaper.title || 'download'); // Specify a download filename
-    link.style.display = 'none'; // Hide the link
-    document.body.appendChild(link); // Append to body
     link.click(); // Trigger a click to download
-    document.body.removeChild(link); // Remove the link from the DOM
-};
+  };
 
   return (
     <div className="image-details-container">
