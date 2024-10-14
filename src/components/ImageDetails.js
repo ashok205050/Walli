@@ -46,7 +46,11 @@ const ImageDetails = () => {
     // Create a link element for downloading the image
     const link = document.createElement('a');
     link.href = wallpaper.image; // The URL of the image from Firebase
-    link.setAttribute('download', wallpaper.title || 'download'); // Specify a download filename
+
+    // Use a fallback filename if the title is not provided
+    const filename = wallpaper.title ? `${wallpaper.title}.jpg` : 'download.jpg';
+    link.setAttribute('download', filename); // Specify a download filename
+
     document.body.appendChild(link); // Append to body to make the link clickable
     link.click(); // Trigger a click to download
     document.body.removeChild(link); // Remove the link from the DOM after clicking
