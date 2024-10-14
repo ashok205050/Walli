@@ -6,11 +6,11 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isCategoriesVisible, setCategoriesVisible] = useState(false);
-  const [searchQueryInput, setSearchQueryInput] = useState(''); // Local state for search input
+  const [searchQueryInput, setSearchQueryInput] = useState(''); 
   const [userInfo, setUserInfo] = useState(null);
   const [username, setUsername] = useState('');
-  const [selectedCategory, setLocalSelectedCategory] = useState(''); // State for selected category
-  const [isLogoutVisible, setLogoutVisible] = useState(false); // State to toggle logout visibility
+  const [selectedCategory, setLocalSelectedCategory] = useState(''); 
+  const [isLogoutVisible, setLogoutVisible] = useState(false);
 
   useEffect(() => {
     const savedUserInfo = localStorage.getItem('userInfo');
@@ -24,13 +24,13 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
 
     // Extract category and search from URL parameters on initial load
     const params = new URLSearchParams(location.search);
-    const categoryFromUrl = params.get('category') || 'all'; // Default to 'all'
+    const categoryFromUrl = params.get('category') || 'all'; 
     const searchFromUrl = params.get('search') || '';
 
-    setLocalSelectedCategory(categoryFromUrl); // Update local selected category state
-    setSearchQueryInput(searchFromUrl); // Set local search input state
-    setSearchQuery(searchFromUrl); // Set the search query in App.js
-    setSelectedCategory(categoryFromUrl); // Set selected category in parent component
+    setLocalSelectedCategory(categoryFromUrl); 
+    setSearchQueryInput(searchFromUrl); 
+    setSearchQuery(searchFromUrl); 
+    setSelectedCategory(categoryFromUrl); 
   }, [location.search, setSelectedCategory]);
 
   const toggleCategories = (event) => {
@@ -47,23 +47,23 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
   };
 
   const handleCategorySelection = (category) => {
-    setLocalSelectedCategory(category); // Update local selected category
-    setSearchQueryInput(''); // Clear search query when category changes
-    setSearchQuery(''); // Clear search query in App.js
-    navigate(`/?category=${category}`); // Update URL with selected category
+    setLocalSelectedCategory(category); 
+    setSearchQueryInput(''); 
+    setSearchQuery(''); 
+    navigate(`/?category=${category}`);
     closeCategories();
   };
 
   const handleSearch = (event) => {
     event.preventDefault();
-    setSearchQuery(searchQueryInput); // Set the search query in App.js
-    navigate(`/?search=${searchQueryInput}`); // Update URL with search query
+    setSearchQuery(searchQueryInput); 
+    navigate(`/?search=${searchQueryInput}`); 
   };
 
   const handleSecondarySearch = (event) => {
     event.preventDefault();
-    setSearchQuery(searchQueryInput); // Set the search query in App.js
-    navigate(`/?search=${searchQueryInput}`); // Update URL with search query
+    setSearchQuery(searchQueryInput); 
+    navigate(`/?search=${searchQueryInput}`); 
   };
 
   const handleLogout = () => {
@@ -71,14 +71,14 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
     setUsername('');
     localStorage.removeItem('userInfo');
     localStorage.removeItem('username');
-    setLogoutVisible(false); // Hide logout after logging out
+    setLogoutVisible(false); 
   };
 
   const handleUploadClick = () => {
     if (userInfo) {
-      navigate('/upload'); // Navigate to the upload page if the user is signed in
+      navigate('/upload'); 
     } else {
-      navigate('/signin'); // Redirect to sign-in page if the user is not signed in
+      navigate('/signin'); 
     }
   };
 
@@ -88,8 +88,8 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
 
     if (
       isCategoriesVisible &&
-      !categoriesContainer.contains(event.target) && // Close if click outside category container
-      !hamburger.contains(event.target) // Close if click outside hamburger
+      !categoriesContainer.contains(event.target) && 
+      !hamburger.contains(event.target) 
     ) {
       closeCategories();
     }
@@ -100,10 +100,9 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
     return () => {
       document.removeEventListener('click', handleDocumentClick);
     };
-  }, [isCategoriesVisible]); // Re-run when `isCategoriesVisible` changes
-
+  }, [isCategoriesVisible]); 
   const toggleLogoutVisibility = () => {
-    setLogoutVisible((prevState) => !prevState); // Toggle logout visibility
+    setLogoutVisible((prevState) => !prevState); 
   };
 
   return (
@@ -151,7 +150,7 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
           {userInfo ? (
                 <div className="user-info">
                   <img src={userInfo.picture} alt="Profile" className="profile-picture" />
-                  <span onClick={() => navigate('/profile')}>{username}</span> {/* Navigate to profile page */}
+                  <span onClick={() => navigate('/profile')}>{username}</span> 
                 </div>
               ) : (
                 <a onClick={() => navigate('/signin')} href="#">
@@ -168,7 +167,7 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
           <input
             type="text"
             value={searchQueryInput}
-            onChange={(e) => setSearchQueryInput(e.target.value)} // Update local search query state
+            onChange={(e) => setSearchQueryInput(e.target.value)} 
             placeholder="Search W A L L I"
             aria-label="Search"
           />
@@ -182,7 +181,7 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
 <div className="secondary-navbar" id="secondaryNavbar">
   <div className="navbar-content">
     <span>Wallpapers</span>
-    {selectedCategory && <span className="separator"> / </span>}  {/* Added spaces around the separator */}
+    {selectedCategory && <span className="separator"> / </span>}  
     {selectedCategory && <span className="selected-category">{selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}</span>}
   </div>
 </div>

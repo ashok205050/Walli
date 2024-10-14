@@ -61,7 +61,7 @@ const PrivacyPolicy = () => {
 
           <section className="privacy-policy-contact">
             <h2>Contact Me</h2>
-            <p>If you have any questions about this Privacy Policy, feel free to reach out at <strong>[Your Contact Information]</strong>. I’m here to help!</p>
+            <p>If you have any questions about this Privacy Policy, feel free to reach out at <strong>wallpaperswalli85@gmail.com</strong>. I’m here to help!</p>
           </section>
         </div>
       </div>

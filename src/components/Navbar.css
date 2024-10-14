@@ -31,7 +31,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 60%;
+  width: 50%;
   order: 3;
 }
 .search-container button:hover{
@@ -73,6 +73,7 @@
 /* Nav Links Styling */
 .credentials{
   order: 4;
+  display: flex;
 }
 
 .credentials a {
@@ -80,7 +81,7 @@
   text-decoration: none;
   font-size: 1rem;
   transition: color 0.3s ease-in-out;
-  padding-left: 1rem;
+  padding: 1rem;
 }
 
 .credentials a:hover {

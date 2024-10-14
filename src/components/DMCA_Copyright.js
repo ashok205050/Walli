@@ -43,7 +43,7 @@ const DMCA_Copyright = () => {
 
           <section className="dmca-contact">
             <h2>Contact Us</h2>
-            <p>If you have any questions about this DMCA Policy, please contact us at <strong>[Your Contact Information]</strong>.</p>
+            <p>If you have any questions about this DMCA Policy, please contact us at <strong>wallpaperswalli85@gmail.com</strong>.</p>
           </section>
 
           {/* DMCA Badge Integration */}

@@ -43,7 +43,7 @@ const Aboutus = () => {
           <section className="about-us-contact">
             <h2>Contact Me</h2>
             <p>
-              Have any questions, feedback, or ideas? Feel free to reach out at <strong>[Your Contact Information]</strong>. I’d love to hear from you and improve W A L L I based on what you want to see!
+              Have any questions, feedback, or ideas? Feel free to reach out at <strong>wallpaperswalli85@gmail.com</strong>. I’d love to hear from you and improve W A L L I based on what you want to see!
             </p>
           </section>
         </div>
