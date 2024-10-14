@@ -36,15 +36,16 @@ const ImageDetails = () => {
 
   const handleDownload = (e) => {
     e.preventDefault(); // Prevent default action
-    console.log("Attempting to download image from:", wallpaper.image);
+
     // Create a link element
     const link = document.createElement('a');
     link.href = wallpaper.image; // The URL of the image
-    link.setAttribute('download', wallpaper.title || 'download'); // Specify a download filename, default to 'download'
+    link.setAttribute('download', wallpaper.title || 'download'); // Specify a download filename
+    link.style.display = 'none'; // Hide the link
     document.body.appendChild(link); // Append to body
     link.click(); // Trigger a click to download
     document.body.removeChild(link); // Remove the link from the DOM
-  };
+};
 
   return (
     <div className="image-details-container">
