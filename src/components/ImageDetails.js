@@ -34,45 +34,16 @@ const ImageDetails = () => {
     return <p>Wallpaper not found.</p>;
   }
 
-  const handleDownload = async (e) => {
+  const handleDownload = (e) => {
     e.preventDefault(); // Prevent default action
-
-    try {
-      // Check if the image is served from Firebase Storage or other service
-      if (wallpaper.image.includes('firebase')) {
-        // If it's from Firebase, generate a signed URL if needed
-        const response = await fetch('https://YOUR_FIREBASE_FUNCTION_ENDPOINT', {
-          method: 'POST',
-          body: JSON.stringify({ filePath: wallpaper.image }),
-          headers: { 'Content-Type': 'application/json' },
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch signed URL');
-        }
-
-        const data = await response.json();
-        const downloadUrl = data.url;
-
-        // Create a link element
-        const link = document.createElement('a');
-        link.href = downloadUrl; // The signed URL
-        link.setAttribute('download', wallpaper.title || 'download'); // Specify a download filename, default to 'download'
-        document.body.appendChild(link); // Append to body
-        link.click(); // Trigger a click to download
-        document.body.removeChild(link); // Remove the link from the DOM
-      } else {
-        // If it's not from Firebase, directly download the image
-        const link = document.createElement('a');
-        link.href = wallpaper.image; // The URL of the image
-        link.setAttribute('download', wallpaper.title || 'download'); // Specify a download filename
-        document.body.appendChild(link); // Append to body
-        link.click(); // Trigger a click to download
-        document.body.removeChild(link); // Remove the link from the DOM
-      }
-    } catch (error) {
-      console.error("Error downloading image:", error);
-    }
+    console.log("Attempting to download image from:", wallpaper.image);
+    // Create a link element
+    const link = document.createElement('a');
+    link.href = wallpaper.image; // The URL of the image
+    link.setAttribute('download', wallpaper.title || 'download'); // Specify a download filename, default to 'download'
+    document.body.appendChild(link); // Append to body
+    link.click(); // Trigger a click to download
+    document.body.removeChild(link); // Remove the link from the DOM
   };
 
   return (
