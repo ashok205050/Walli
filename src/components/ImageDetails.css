@@ -58,8 +58,7 @@
 
   .image {
     width: 50%;
-    margin-right: 20px;
-    height: 500px; 
+    margin-right: 20px; 
   }
 
   .details {
@@ -72,7 +71,6 @@
 @media (max-width: 767px) {
   .image {
     max-width: 100%; 
-    height: 500px;
   }
 
   .details h2 {
