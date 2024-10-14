@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import './ImageDetails.css'; // Ensure to have this CSS file
+import './ImageDetails.css';
 
 const ImageDetails = () => {
   const { id } = useParams();
@@ -34,16 +34,42 @@ const ImageDetails = () => {
     return <p>Wallpaper not found.</p>;
   }
 
-  const handleDownload = (e) => {
-    e.preventDefault(); // Prevent default action
+  // Function to handle the download of the image
+  const handleDownload = async (e) => {
+    e.preventDefault();
 
-    // Create a link element
-    const link = document.createElement('a');
-    link.href = wallpaper.image; // The URL of the image
-    link.setAttribute('download', wallpaper.title || 'download'); // Specify a download filename, default to 'download'
-    document.body.appendChild(link); // Append to body
-    link.click(); // Trigger a click to download
-    document.body.removeChild(link); // Remove the link from the DOM
+    // Check if the image is served from Firebase Storage or other service
+    if (wallpaper.image.includes('firebase')) {
+      try {
+        // Fetch the signed URL (this should be implemented in your backend to return a download URL)
+        const response = await fetch(`https://YOUR_FIREBASE_FUNCTION_ENDPOINT`, {
+          method: 'POST',
+          body: JSON.stringify({ filePath: wallpaper.image }),
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        const data = await response.json();
+        const downloadUrl = data.url;
+
+        // Trigger download
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.setAttribute('download', wallpaper.title || 'download');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (error) {
+        console.error("Error downloading from Firebase:", error);
+      }
+    } else {
+      // Fallback if not Firebase: directly downloading the image
+      const link = document.createElement('a');
+      link.href = wallpaper.image;
+      link.setAttribute('download', wallpaper.title || 'download');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   };
 
   return (
