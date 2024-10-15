@@ -191,6 +191,7 @@
   }
   #upload-txt{
       display: none; 
+      padding-right: 10px;
   }
 
   /* Adjust any other necessary styles */
