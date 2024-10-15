@@ -15,6 +15,7 @@ const ImageDetails = () => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
+        console.log("Fetched wallpaper data:", data); // Log the fetched data
         setWallpaper(data);
       } catch (error) {
         console.error("Error fetching wallpaper details:", error);
@@ -22,9 +23,10 @@ const ImageDetails = () => {
         setLoading(false);
       }
     };
-
+  
     fetchWallpaperDetails();
   }, [id]);
+  
 
   if (loading) {
     return <p>Loading...</p>;
