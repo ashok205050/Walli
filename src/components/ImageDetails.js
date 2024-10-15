@@ -82,7 +82,7 @@ const ImageDetails = () => {
             <span>
               <img 
                 src={wallpaper.uploaded_by.profile_picture || '/default-profile.png'} 
-                alt="Profile" 
+                // alt="Profile" 
                 style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '10px' }} 
               />
               <a href={`/profile/${wallpaper.uploaded_by.id}`}>
