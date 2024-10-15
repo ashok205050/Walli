@@ -32,6 +32,11 @@ const SignUp = () => {
           localStorage.setItem('token', data.token); // Store token in localStorage
         }
 
+        // Store user ID in local storage
+        if (data.userInfo && data.userInfo.id) {
+          localStorage.setItem('userId', data.userInfo.id); // Store user ID
+        }
+
         alert(data.message); // Show success message
         // Clear input fields
         setUsername('');

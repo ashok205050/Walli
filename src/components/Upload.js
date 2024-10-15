@@ -53,6 +53,11 @@ const Upload = () => {
       return;
     }
 
+    if (!currentUser) {
+      alert('You must be logged in to upload an image.'); // Check for user authentication
+      return;
+    }
+
     setLoading(true); // Show loading state
 
     // Step 1: Upload the file to Firebase
@@ -68,7 +73,7 @@ const Upload = () => {
       formData.append('description', description); // Add the description
       formData.append('tags', tags); // Add the tags
       formData.append('category', category); // Add the selected category
-      formData.append('uploaded_by', currentUser.username || 'Guest'); // Add the username of the logged-in user
+      formData.append('uploaded_by', currentUser.id); // Use the user's ID for the uploaded_by field
 
       // Step 3: Send the data to your Django backend
       const response = await fetch('https://walli-django-production.up.railway.app/api/wallpapers/', {

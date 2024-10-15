@@ -64,6 +64,9 @@ const SignIn = () => {
         localStorage.setItem('token', data.token); // Save access token
         localStorage.setItem('refresh_token', data.refresh_token); // Save refresh token if provided by the backend
 
+        // Save user ID in local storage
+        localStorage.setItem('userId', data.userInfo.id); // Save user ID
+
         setSuccessMessage('Login Successful!');
         setTimeout(() => {
           navigate('/'); // Redirect to home page after 2 seconds
