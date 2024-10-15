@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { storage } from './firebaseConfig'; 
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -8,8 +8,24 @@ const Upload = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState('');
+  const [category, setCategory] = useState('');
   const [loading, setLoading] = useState(false);
+  const [username, setUsername] = useState(''); // State for logged-in username
   const navigate = useNavigate();
+
+  // Sample categories
+  const categories = ['Nature', 'Animals', 'Technology', 'Art', 'Abstract'];
+
+  useEffect(() => {
+    // Fetch the logged-in user's information (mock implementation)
+    const fetchUser = async () => {
+      // Replace this with your actual user fetching logic
+      const user = { username: 'current_user' }; // Example user
+      setUsername(user.username);
+    };
+
+    fetchUser();
+  }, []);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -43,6 +59,8 @@ const Upload = () => {
       formData.append('title', title); // Add the title
       formData.append('description', description); // Add the description
       formData.append('tags', tags); // Add the tags
+      formData.append('category', category); // Add the selected category
+      formData.append('uploaded_by', username); // Add the username of the logged-in user
 
       // Step 3: Send the data to your Django backend
       const response = await fetch('https://walli-django-production.up.railway.app/api/wallpapers/', {
@@ -91,6 +109,13 @@ const Upload = () => {
           value={tags}
           onChange={(e) => setTags(e.target.value)}
         />
+        <select value={category} onChange={(e) => setCategory(e.target.value)} required>
+          <option value="">Select Category</option>
+          {categories.map((cat, index) => (
+            <option key={index} value={cat}>{cat}</option>
+          ))}
+        </select>
+        <p>Uploaded By: {username}</p> {/* Display the username of the logged-in user */}
         <button type="submit" disabled={loading}>Upload</button> {/* Disable button during loading */}
       </form>
     </div>
