@@ -189,9 +189,12 @@
   .hamburger span {
       display: none; /* Hide the 'Categories' text */
   }
+  #upload-button{
+    padding-right: 10px;
+  }
+
   #upload-txt{
       display: none; 
-      padding-right: 10px;
   }
 
   /* Adjust any other necessary styles */
