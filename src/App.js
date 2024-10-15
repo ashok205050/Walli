@@ -15,6 +15,8 @@ import ResetPasswordConfirm from './components/ResetPasswordConfirm';
 import ProfilePage from './components/ProfilePage';
 import PrivacyPolicy from './components/PrivacyPolicy'; 
 import DMCA_Copyright from './components/DMCA_Copyright';
+import { AuthProvider } from './components/AuthContext';
+
 
 const App = () => {
   const location = useLocation(); 
@@ -53,36 +55,38 @@ const App = () => {
 
   return (
     <GoogleOAuthProvider clientId="641871387261-jfjirnl5fo0a76nrvshjbee5cn818cns.apps.googleusercontent.com">
-      <div>
-        {/* Render Navbar only if not on auth/image/copyright pages */}
-        {!isAuthPage && !isImagePage && !isCopyrightPage && (
-          <Navbar 
-            userInfo={userInfo} 
-            setUserInfo={setUserInfo} 
-            setSelectedCategory={setSelectedCategory} 
-            setSearchQuery={setSearchQuery} 
-          />
-        )}
-        <div className="App">
-          <Routes>
-            <Route path="/" element={<WallpaperList selectedCategory={selectedCategory} searchQuery={searchQuery} />} />
-            <Route path="/upload" element={<Upload />} />
-            <Route path="/signin" element={<SignIn setUserInfo={setUserInfo} />} />
-            <Route path="/image/:id" element={<ImageDetails />} />
-            <Route path="/contact" element={<ContactForm />} />
-            <Route path="/about" element={<Aboutus />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/reset-password-confirm/:uid/:token" element={<ResetPasswordConfirm />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/copyright" element={<DMCA_Copyright />} /> {/* Handle copyright separately */}
-          </Routes>
+      <AuthProvider>
+        <div>
+          {/* Render Navbar only if not on auth/image/copyright pages */}
+          {!isAuthPage && !isImagePage && !isCopyrightPage && (
+            <Navbar 
+              userInfo={userInfo} 
+              setUserInfo={setUserInfo} 
+              setSelectedCategory={setSelectedCategory} 
+              setSearchQuery={setSearchQuery} 
+            />
+          )}
+          <div className="App">
+            <Routes>
+              <Route path="/" element={<WallpaperList selectedCategory={selectedCategory} searchQuery={searchQuery} />} />
+              <Route path="/upload" element={<Upload />} />
+              <Route path="/signin" element={<SignIn setUserInfo={setUserInfo} />} />
+              <Route path="/image/:id" element={<ImageDetails />} />
+              <Route path="/contact" element={<ContactForm />} />
+              <Route path="/about" element={<Aboutus />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/reset-password-confirm/:uid/:token" element={<ResetPasswordConfirm />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/copyright" element={<DMCA_Copyright />} /> {/* Handle copyright separately */}
+            </Routes>
+          </div>
+          {/* Render Footer only if not on auth/image/copyright pages */}
+          {!isAuthPage && !isImagePage && !isCopyrightPage && <Footer />}
         </div>
-        {/* Render Footer only if not on auth/image/copyright pages */}
-        {!isAuthPage && !isImagePage && !isCopyrightPage && <Footer />}
-      </div>
-    </GoogleOAuthProvider>
+        </AuthProvider>
+      </GoogleOAuthProvider>
   );
 };
 
