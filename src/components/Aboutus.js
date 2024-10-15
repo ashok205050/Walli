@@ -13,7 +13,7 @@ const Aboutus = () => {
           <section className="about-us-intro">
             <h2>Welcome to W A L L I!</h2>
             <p>
-              Hey! I am AShok who loves WEB, and <b>W A L L I</b> is a personal project that combines those passions. My goal with this platform is to offer cool, high-quality wallpapers that help you personalize your devices with ease. It's all about making your screens look awesome, whether you're into minimalism, nature, or something totally abstract.
+              Hey! I am Ashok who loves WEB, and <b>W A L L I</b> is a personal project that combines those passions. My goal with this platform is to offer cool, high-quality wallpapers that help you personalize your devices with ease. It's all about making your screens look awesome, whether you're into minimalism, nature, or something totally abstract.
             </p>
           </section>
 
