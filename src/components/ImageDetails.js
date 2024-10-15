@@ -86,7 +86,7 @@ const ImageDetails = () => {
                 style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '10px' }} 
               />
               <a href={`/profile/${wallpaper.uploaded_by.id}`}>
-                {wallpaper.uploaded_by.username} {/* This will show the username */}
+                {wallpaper.uploaded_by.username} {/* This should show the username */}
               </a>
             </span>
           ) : (
