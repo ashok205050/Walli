@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { storage } from './firebaseConfig'; // Import your Firebase storage configuration
+import { storage } from './firebaseConfig'; 
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const Upload = () => {

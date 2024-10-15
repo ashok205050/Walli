@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import './ImageDetails.css'; // Ensure to have this CSS file
+import './ImageDetails.css';
 
 const ImageDetails = () => {
   const { id } = useParams();
@@ -35,37 +35,31 @@ const ImageDetails = () => {
   }
 
   const handleDownload = async (e) => {
-    e.preventDefault(); // Prevent default action
+    e.preventDefault();
 
-    // Check if the wallpaper image URL is valid
     if (!wallpaper.image) {
       console.error("Image URL is not valid.");
       return;
     }
 
-    // Fetch the image to ensure it's accessible before downloading
     try {
       const response = await fetch(wallpaper.image);
       if (!response.ok) {
         throw new Error("Failed to fetch the image.");
       }
 
-      // Create a blob from the response
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
-
-      // Create a link element for downloading the image
       const link = document.createElement('a');
-      link.href = url; // Use the blob URL
-      link.setAttribute('download', wallpaper.title || 'download'); // Specify a download filename
-      document.body.appendChild(link); // Append to body to make the link clickable
-      link.click(); // Trigger a click to download
+      link.href = url;
+      link.setAttribute('download', wallpaper.title || 'download');
+      document.body.appendChild(link);
+      link.click();
 
-      // Remove the link from the DOM after clicking
       setTimeout(() => {
         document.body.removeChild(link);
-        window.URL.revokeObjectURL(url); // Free up memory after download is triggered
-      }, 100); // Delay revoking URL to ensure download starts
+        window.URL.revokeObjectURL(url);
+      }, 100);
     } catch (error) {
       console.error("Error downloading the image:", error);
     }
@@ -83,7 +77,7 @@ const ImageDetails = () => {
         <p><strong>Uploaded At:</strong> {new Date(wallpaper.uploaded_at).toLocaleString()}</p>
         <p>
           <strong>Uploaded By:</strong> 
-          {wallpaper.uploaded_by && (
+          {wallpaper.uploaded_by ? (
             <span>
               <img 
                 src={wallpaper.uploaded_by.profile_picture || '/default-profile.png'} 
@@ -91,9 +85,11 @@ const ImageDetails = () => {
                 style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '10px' }} 
               />
               <a href={`/profile/${wallpaper.uploaded_by.id}`}>
-                {wallpaper.uploaded_by.username}
+                {wallpaper.uploaded_by.username} {/* This should show the username */}
               </a>
             </span>
+          ) : (
+            <span>N/A</span>
           )}
         </p>
         <button onClick={handleDownload} className="download-button">Download</button>
