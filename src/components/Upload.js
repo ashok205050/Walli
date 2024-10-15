@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { storage } from './firebaseConfig'; 
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -8,23 +8,24 @@ const Upload = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState('');
-  const [category, setCategory] = useState('');
   const [loading, setLoading] = useState(false);
-  const [username, setUsername] = useState(''); // State for logged-in username
+  const [categories, setCategories] = useState([]); // State for categories
+  const [selectedCategory, setSelectedCategory] = useState(''); // State for selected category
   const navigate = useNavigate();
 
-  // Sample categories
-  const categories = ['Nature', 'Animals', 'Technology', 'Art', 'Abstract'];
-
   useEffect(() => {
-    // Fetch the logged-in user's information (mock implementation)
-    const fetchUser = async () => {
-      // Replace this with your actual user fetching logic
-      const user = { username: 'current_user' }; // Example user
-      setUsername(user.username);
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('https://walli-django-production.up.railway.app/api/categories/'); // Update with your categories endpoint
+        if (!response.ok) throw new Error("Failed to fetch categories.");
+        const data = await response.json();
+        setCategories(data); // Store fetched categories
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
     };
 
-    fetchUser();
+    fetchCategories(); // Fetch categories when the component mounts
   }, []);
 
   const handleFileChange = (e) => {
@@ -59,8 +60,8 @@ const Upload = () => {
       formData.append('title', title); // Add the title
       formData.append('description', description); // Add the description
       formData.append('tags', tags); // Add the tags
-      formData.append('category', category); // Add the selected category
-      formData.append('uploaded_by', username); // Add the username of the logged-in user
+      formData.append('category', selectedCategory); // Add selected category
+      formData.append('uploaded_by', 'username'); // Replace with actual logged-in username
 
       // Step 3: Send the data to your Django backend
       const response = await fetch('https://walli-django-production.up.railway.app/api/wallpapers/', {
@@ -109,13 +110,16 @@ const Upload = () => {
           value={tags}
           onChange={(e) => setTags(e.target.value)}
         />
-        <select value={category} onChange={(e) => setCategory(e.target.value)} required>
-          <option value="">Select Category</option>
-          {categories.map((cat, index) => (
-            <option key={index} value={cat}>{cat}</option>
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          required
+        >
+          <option value="" disabled>Select Category</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.name}>{category.name}</option> // Ensure category object has id and name
           ))}
         </select>
-        <p>Uploaded By: {username}</p> {/* Display the username of the logged-in user */}
         <button type="submit" disabled={loading}>Upload</button> {/* Disable button during loading */}
       </form>
     </div>
