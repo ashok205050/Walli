@@ -145,7 +145,7 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
         <div className="credentials">
           <a href="#" id="upload-button" onClick={handleUploadClick}>
             <i className="fa-solid fa-arrow-up-from-bracket"></i>
-            <span> Upload</span>
+            <span id='upload-txt'> Upload</span>
           </a>
           {userInfo ? (
                 <div className="user-info">
