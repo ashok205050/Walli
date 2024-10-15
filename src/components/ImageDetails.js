@@ -43,24 +43,37 @@ const ImageDetails = () => {
       return;
     }
 
-    // Create a link element for downloading the image
-    const link = document.createElement('a');
-    link.href = wallpaper.image; // Use the image URL directly
-    link.setAttribute('download', wallpaper.title || 'download'); // Specify a download filename
-    document.body.appendChild(link); // Append to body to make the link clickable
-    link.click(); // Trigger a click to download
-    document.body.removeChild(link); // Remove the link from the DOM after clicking
+    // Fetch the image to ensure it's accessible before downloading
+    try {
+      const response = await fetch(wallpaper.image);
+      if (!response.ok) {
+        throw new Error("Failed to fetch the image.");
+      }
+
+      // Create a blob from the response
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      // Create a link element for downloading the image
+      const link = document.createElement('a');
+      link.href = url; // Use the blob URL
+      link.setAttribute('download', wallpaper.title || 'download'); // Specify a download filename
+      document.body.appendChild(link); // Append to body to make the link clickable
+      link.click(); // Trigger a click to download
+
+      // Remove the link from the DOM after clicking
+      setTimeout(() => {
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url); // Free up memory after download is triggered
+      }, 100); // Delay revoking URL to ensure download starts
+    } catch (error) {
+      console.error("Error downloading the image:", error);
+    }
   };
 
   return (
     <div className="image-details-container">
-      <img 
-        className="image" 
-        src={wallpaper.image} 
-        alt={wallpaper.title} 
-        onClick={handleDownload} // Call handleDownload on click
-        style={{ cursor: 'pointer' }} // Change cursor to pointer to indicate clickable
-      />
+      <img className="image" src={wallpaper.image} alt={wallpaper.title} />
       <div className="details">
         <h2>{wallpaper.title}</h2>
         <p><strong>Category:</strong> {wallpaper.category || 'N/A'}</p>
@@ -83,6 +96,7 @@ const ImageDetails = () => {
             </span>
           )}
         </p>
+        <button onClick={handleDownload} className="download-button">Download</button>
       </div>
     </div>
   );
