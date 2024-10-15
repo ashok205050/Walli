@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { storage } from './firebaseConfig'; 
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -8,25 +8,30 @@ const Upload = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState('');
+  const [category, setCategory] = useState('nature'); // Default category
   const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState([]); // State for categories
-  const [selectedCategory, setSelectedCategory] = useState(''); // State for selected category
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch('https://walli-django-production.up.railway.app/api/categories/'); // Update with your categories endpoint
-        if (!response.ok) throw new Error("Failed to fetch categories.");
-        const data = await response.json();
-        setCategories(data); // Store fetched categories
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-
-    fetchCategories(); // Fetch categories when the component mounts
-  }, []);
+  // Define categories directly from your CATEGORY_CHOICES in models.py
+  const CATEGORY_CHOICES = [
+    { value: 'nature', label: 'Nature' },
+    { value: 'abstract', label: 'Abstract' },
+    { value: 'technology', label: 'Technology' },
+    { value: 'space', label: 'Space' },
+    { value: 'animals', label: 'Animals' },
+    { value: 'art', label: 'Art' },
+    { value: 'funny', label: 'Funny' },
+    { value: 'entertainment', label: 'Entertainment' },
+    { value: 'sports', label: 'Sports' },
+    { value: 'cars & vehicles', label: 'Cars & Vehicles' },
+    { value: 'bollywood', label: 'Bollywood' },
+    { value: 'hollywood', label: 'Hollywood' },
+    { value: 'games', label: 'Games' },
+    { value: 'music', label: 'Music' },
+    { value: 'patterns', label: 'Patterns' },
+    { value: 'anime', label: 'Anime' },
+    { value: 'holiday', label: 'Holiday' },
+  ];
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -60,8 +65,8 @@ const Upload = () => {
       formData.append('title', title); // Add the title
       formData.append('description', description); // Add the description
       formData.append('tags', tags); // Add the tags
-      formData.append('category', selectedCategory); // Add selected category
-      formData.append('uploaded_by', 'username'); // Replace with actual logged-in username
+      formData.append('category', category); // Add the selected category
+      formData.append('uploaded_by', ''); // Add the username of the logged-in user
 
       // Step 3: Send the data to your Django backend
       const response = await fetch('https://walli-django-production.up.railway.app/api/wallpapers/', {
@@ -110,14 +115,12 @@ const Upload = () => {
           value={tags}
           onChange={(e) => setTags(e.target.value)}
         />
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          required
-        >
-          <option value="" disabled>Select Category</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.name}>{category.name}</option> // Ensure category object has id and name
+        {/* Dropdown for categories */}
+        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+          {CATEGORY_CHOICES.map((choice) => (
+            <option key={choice.value} value={choice.value}>
+              {choice.label}
+            </option>
           ))}
         </select>
         <button type="submit" disabled={loading}>Upload</button> {/* Disable button during loading */}
