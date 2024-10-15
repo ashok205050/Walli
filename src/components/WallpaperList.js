@@ -16,37 +16,39 @@ const WallpaperList = () => {
     const params = [];
 
     if (category !== 'all') {
-        params.push(`category=${category}`);
+      params.push(`category=${category}`);
     }
     if (search) {
-        params.push(`search=${search}`);
+      params.push(`search=${search}`);
     }
 
     if (params.length > 0) {
-        apiUrl += '?' + params.join('&');
+      apiUrl += '?' + params.join('&');
     }
 
     try {
-        const response = await fetch(apiUrl, {
-            // Remove Authorization header for public access
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+      const response = await fetch(apiUrl, {
+        // Remove Authorization header for public access
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-        if (!response.ok) {
-            throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
-        }
+      if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+      }
 
-        const data = await response.json();
-        setWallpapers(data.results || []); 
+      const data = await response.json();
+      // Sort wallpapers by uploaded_at in descending order
+      const sortedWallpapers = data.results || [];
+      sortedWallpapers.sort((a, b) => new Date(b.uploaded_at) - new Date(a.uploaded_at));
+      setWallpapers(sortedWallpapers);
     } catch (error) {
-        console.error("Error fetching wallpapers:", error);
+      console.error("Error fetching wallpapers:", error);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
-
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);

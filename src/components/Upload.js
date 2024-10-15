@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { storage } from './firebaseConfig'; 
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { AuthContext } from './AuthContext'; // Assuming you have an AuthContext for user data
 
 const Upload = () => {
+  const { user } = useContext(AuthContext); // Get the current user from context
   const [selectedFile, setSelectedFile] = useState(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -66,7 +68,7 @@ const Upload = () => {
       formData.append('description', description); // Add the description
       formData.append('tags', tags); // Add the tags
       formData.append('category', category); // Add the selected category
-      formData.append('uploaded_by', ''); // Add the username of the logged-in user
+      formData.append('uploaded_by', user.id); // Add the user ID of the logged-in user
 
       // Step 3: Send the data to your Django backend
       const response = await fetch('https://walli-django-production.up.railway.app/api/wallpapers/', {
