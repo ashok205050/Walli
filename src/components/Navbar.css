@@ -190,7 +190,7 @@
       display: none; /* Hide the 'Categories' text */
   }
   #upload-button{
-    padding-right: 10px;
+    margin-right: 10px;
   }
 
   #upload-txt{
