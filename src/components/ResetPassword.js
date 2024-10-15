@@ -14,7 +14,7 @@ const ResetPassword = () => {
     setSuccessMessage('');
 
     // API call for password reset
-    fetch('http://walli-django-production.up.railway.app/api/password-reset/', { // Adjust to your backend URL
+    fetch('https://walli-django-production.up.railway.app/api/password-reset/', { // Adjust to your backend URL
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
