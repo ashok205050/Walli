@@ -1,20 +1,19 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { storage } from './firebaseConfig'; 
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { useAuth } from './AuthContext'; // Make sure to use useAuth for user data
+import { useAuth } from './AuthContext';
 
 const Upload = () => {
-  const { currentUser } = useAuth(); // Use useAuth to get the current user
+  const { currentUser } = useAuth(); // Get current user from AuthContext
   const [selectedFile, setSelectedFile] = useState(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState('');
-  const [category, setCategory] = useState('nature'); // Default category
+  const [category, setCategory] = useState('nature');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Define categories directly from your CATEGORY_CHOICES in models.py
   const CATEGORY_CHOICES = [
     { value: 'nature', label: 'Nature' },
     { value: 'abstract', label: 'Abstract' },
@@ -47,63 +46,60 @@ const Upload = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!selectedFile) {
       alert('No file selected');
       return;
     }
-
     if (!currentUser) {
-      alert('You must be logged in to upload an image.'); // Check for user authentication
+      alert('You must be logged in to upload an image.');
       return;
     }
 
-    setLoading(true); // Show loading state
-
-    // Step 1: Upload the file to Firebase
+    setLoading(true);
     const storageRef = ref(storage, `wallpapers/${selectedFile.name}`);
     try {
-      await uploadBytes(storageRef, selectedFile); // Upload the image to Firebase
-      const downloadURL = await getDownloadURL(storageRef); // Get the download URL
+      await uploadBytes(storageRef, selectedFile);
+      const downloadURL = await getDownloadURL(storageRef);
 
-      // Step 2: Prepare form data to send to Django
       const formData = new FormData();
-      formData.append('image', downloadURL); // Add the Firebase image URL
-      formData.append('title', title); // Add the title
-      formData.append('description', description); // Add the description
-      formData.append('tags', tags); // Add the tags
-      formData.append('category', category); // Add the selected category
-      formData.append('uploaded_by', currentUser.id); // Use the user's ID for the uploaded_by field
+      formData.append('image', downloadURL);
+      formData.append('title', title);
+      formData.append('description', description);
+      formData.append('tags', tags);
+      formData.append('category', category);
+      formData.append('uploaded_by', currentUser.uid); // Ensure you're using `uid`
 
-      // Step 3: Send the data to your Django backend
       const response = await fetch('https://walli-django-production.up.railway.app/api/wallpapers/', {
         method: 'POST',
-        body: formData, // Send as FormData
+        body: formData,
       });
 
-      // Handle the response
       if (response.ok) {
-        alert('Image uploaded successfully!'); // Show success message
-        navigate('/'); // Navigate back to the main page
+        alert('Image uploaded successfully!');
+        navigate('/');
       } else {
         const errorData = await response.json();
-        alert('Error uploading image: ' + JSON.stringify(errorData)); // Handle errors
+        alert('Error uploading image: ' + JSON.stringify(errorData));
       }
     } catch (error) {
-      console.error('Upload error:', error); // Log the error for better debugging
-      alert('An error occurred: ' + error.message); // Show error message
+      console.error('Upload error:', error);
+      alert('An error occurred: ' + error.message);
     } finally {
-      setLoading(false); // Hide loading state
+      setLoading(false);
     }
   };
+
+  if (!currentUser) {
+    return <p>You must be logged in to upload images.</p>;
+  }
 
   return (
     <div className="upload-container">
       <h2>Upload an Image</h2>
-      {loading && <p>Uploading...</p>} {/* Show loading message */}
+      {loading && <p>Uploading...</p>}
       <form onSubmit={handleSubmit}>
         <input type="file" onChange={handleFileChange} required />
-        {selectedFile && <p>Selected File: {selectedFile.name}</p>} {/* Show selected file name */}
+        {selectedFile && <p>Selected File: {selectedFile.name}</p>}
         <input
           type="text"
           placeholder="Title"
@@ -122,7 +118,6 @@ const Upload = () => {
           value={tags}
           onChange={(e) => setTags(e.target.value)}
         />
-        {/* Dropdown for categories */}
         <select value={category} onChange={(e) => setCategory(e.target.value)}>
           {CATEGORY_CHOICES.map((choice) => (
             <option key={choice.value} value={choice.value}>
@@ -130,7 +125,7 @@ const Upload = () => {
             </option>
           ))}
         </select>
-        <button type="submit" disabled={loading}>Upload</button> {/* Disable button during loading */}
+        <button type="submit" disabled={loading}>Upload</button>
       </form>
     </div>
   );
