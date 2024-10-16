@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { storage } from './firebaseConfig'; 
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { useAuth } from './AuthContext';
 
 const Upload = () => {
-  const { currentUser } = useAuth(); // Get current user from AuthContext
   const [selectedFile, setSelectedFile] = useState(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -46,6 +44,9 @@ const Upload = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const currentUser = JSON.parse(localStorage.getItem('userInfo')); // Retrieve user info from local storage
+
     if (!selectedFile) {
       alert('No file selected');
       return;
@@ -89,6 +90,8 @@ const Upload = () => {
     }
   };
 
+  const currentUser = JSON.parse(localStorage.getItem('userInfo')); // Check if the user is logged in
+
   if (!currentUser) {
     return <p>You must be logged in to upload images.</p>;
   }
@@ -98,25 +101,25 @@ const Upload = () => {
       <h2>Upload an Image</h2>
       {loading && <p>Uploading...</p>}
       <form onSubmit={handleSubmit}>
-        <input type="file" onChange={handleFileChange} required />
-        {selectedFile && <p>Selected File: {selectedFile.name}</p>}
         <input
           type="text"
-          placeholder="Title"
+          placeholder="Image Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
         />
         <textarea
-          placeholder="Description"
+          placeholder="Image Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          required
         ></textarea>
         <input
           type="text"
-          placeholder="Tags (comma-separated)"
+          placeholder="Tags (comma separated)"
           value={tags}
           onChange={(e) => setTags(e.target.value)}
+          required
         />
         <select value={category} onChange={(e) => setCategory(e.target.value)}>
           {CATEGORY_CHOICES.map((choice) => (
@@ -125,6 +128,7 @@ const Upload = () => {
             </option>
           ))}
         </select>
+        <input type="file" onChange={handleFileChange} />
         <button type="submit" disabled={loading}>Upload</button>
       </form>
     </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode'; // Correct import for jwtDecode
+import jwtDecode from 'jwt-decode'; // Correct import for jwtDecode
 import './SignIn.css';
 
 const SignIn = () => {
@@ -19,9 +19,6 @@ const SignIn = () => {
     localStorage.setItem('userInfo', JSON.stringify(decoded));
     localStorage.setItem('username', decoded.name || decoded.email.split('@')[0]); // Save username in local storage
     localStorage.setItem('token', token); // Save token in local storage
-
-    // Optionally store refresh token here (depending on backend response)
-    // localStorage.setItem('refresh_token', response.refresh_token);
 
     setSuccessMessage('Login Successful!');
     setTimeout(() => {
@@ -74,10 +71,6 @@ const SignIn = () => {
       })
       .catch((error) => {
         setErrorMessage(error.message);
-        setTimeout(() => {
-          // Refresh the page after 2 seconds
-          window.location.reload();
-        }, 2000);
       });
   };
 
@@ -91,14 +84,14 @@ const SignIn = () => {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Username or Email" // Update placeholder
-          value={identifier} // Bind to identifier
-          onChange={(e) => setIdentifier(e.target.value)} // Update state for identifier
+          placeholder="Username or Email"
+          value={identifier}
+          onChange={(e) => setIdentifier(e.target.value)}
           required
         />
         <div className="password-container">
           <input
-            type={showPassword ? 'text' : 'password'} // Change input type based on showPassword state
+            type={showPassword ? 'text' : 'password'}
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -108,14 +101,14 @@ const SignIn = () => {
             {showPassword ? 'Hide' : 'Show'}
           </button>
         </div>
-        <button className='signin-button' type="submit">Sign In</button>
+        <button className="signin-button" type="submit">Sign In</button>
       </form>
 
       {errorMessage && <p className="error">{errorMessage}</p>}
       {successMessage && <p className="success">{successMessage}</p>}
 
-      <p>Don't have an account? <button className='button' onClick={() => navigate('/signup')}>Sign Up</button></p>
-      <p>Forgot your password? <button className='button' onClick={() => navigate('/reset-password')}>Reset Password</button></p>
+      <p>Don't have an account? <button className="button" onClick={() => navigate('/signup')}>Sign Up</button></p>
+      <p>Forgot your password? <button className="button" onClick={() => navigate('/reset-password')}>Reset Password</button></p>
 
       <GoogleLogin
         onSuccess={handleLoginSuccess}
