@@ -23,17 +23,17 @@ const ResetPasswordConfirm = () => {
     }
 
     // API call to reset password
-    fetch('https://walli-django-production.up.railway.app/api/password-reset-confirm/', { // Adjust to your backend URL
+    fetch('https://walli-django-production.up.railway.app/api/password-reset-confirm/', { // Backend URL
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ uid, token, new_password: newPassword }), // Removed confirm_password from the request body
+      body: JSON.stringify({ uid, token, new_password: newPassword }), // Use new_password as key
     })
       .then((response) => {
         if (!response.ok) {
-          return response.json().then(data => { // Parse the response for error messages
-            throw new Error(data.error || 'Failed to reset password. Please try again.'); // Use error message from the server if available
+          return response.json().then(data => {
+            throw new Error(data.error || 'Failed to reset password. Please try again.');
           });
         }
         return response.json();
@@ -43,11 +43,6 @@ const ResetPasswordConfirm = () => {
       })
       .catch((error) => {
         setErrorMessage(error.message);
-
-        // Refresh the page after 2 seconds
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
       });
   };
 
