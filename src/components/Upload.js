@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { storage } from './firebaseConfig'; 
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -10,6 +10,7 @@ const Upload = () => {
   const [tags, setTags] = useState('');
   const [category, setCategory] = useState('nature');
   const [loading, setLoading] = useState(false);
+  const [username, setUsername] = useState('');
   const navigate = useNavigate();
 
   const CATEGORY_CHOICES = [
@@ -31,6 +32,14 @@ const Upload = () => {
     { value: 'anime', label: 'Anime' },
     { value: 'holiday', label: 'Holiday' },
   ];
+
+  // Fetch username from local storage when component mounts
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    if (userInfo && userInfo.name) {
+      setUsername(userInfo.name);  // Set the username
+    }
+  }, []);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -68,7 +77,7 @@ const Upload = () => {
       formData.append('description', description);
       formData.append('tags', tags);
       formData.append('category', category);
-      formData.append('uploaded_by', currentUser.uid); // Ensure you're using `uid`
+      formData.append('uploaded_by', username); // Automatically fill "uploaded_by" with username
 
       const response = await fetch('https://walli-django-production.up.railway.app/api/wallpapers/', {
         method: 'POST',
@@ -130,6 +139,8 @@ const Upload = () => {
         </select>
         <input type="file" onChange={handleFileChange} />
         <button type="submit" disabled={loading}>Upload</button>
+        {/* Automatically display the "Uploaded By" username */}
+        <p>Uploaded by: {username}</p> 
       </form>
     </div>
   );
