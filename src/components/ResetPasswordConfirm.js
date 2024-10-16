@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-// import './ResetPasswordConfirm.css';
+import './ResetPasswordConfirm.css';
 
 const ResetPasswordConfirm = () => {
   const { uid, token } = useParams();
