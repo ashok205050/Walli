@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
-import jwtDecode from 'jwt-decode'; // Correct import for jwtDecode
+import { jwtDecode } from 'jwt-decode'; // Correct import for jwtDecode
 import './SignIn.css';
 
 const SignIn = () => {
