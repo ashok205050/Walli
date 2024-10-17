@@ -90,28 +90,31 @@ const Upload = () => {
       formData.append('title', title);
       formData.append('description', description);
       formData.append('tags', tags);
-      formData.append('category', JSON.stringify(selectedCategories)); // Send category IDs as an array
-      formData.append('uploaded_by', username); // Automatically fill "uploaded_by" with username
+      // Send category IDs directly without JSON.stringify
+      selectedCategories.forEach((id) => {
+          formData.append('category', id); // Append each ID separately
+      });
+      formData.append('uploaded_by', currentUser.username); // Use current user's username
 
-      const response = await fetch('https://walli-django-production.up.railway.app/api/wallpapers/', {
+      // Make the POST request to your upload API
+      const response = await fetch('/api/upload/', {
         method: 'POST',
         body: formData,
       });
 
-      if (response.ok) {
-        alert('Image uploaded successfully!');
-        navigate('/');
-      } else {
-        const errorData = await response.json();
-        alert('Error uploading image: ' + JSON.stringify(errorData));
+      if (!response.ok) {
+        throw new Error('Failed to upload image');
       }
+
+      alert('Image uploaded successfully');
+      navigate('/'); // Redirect to the homepage or wherever you want
     } catch (error) {
-      console.error('Upload error:', error);
-      alert('An error occurred: ' + error.message);
+      console.error(error);
+      alert('Error uploading image');
     } finally {
       setLoading(false);
     }
-  };
+};
 
   const currentUser = JSON.parse(localStorage.getItem('userInfo')); // Check if the user is logged in
 
