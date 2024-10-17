@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { storage } from './firebaseConfig';
+import { storage } from './firebaseConfig'; 
 import './Upload.css';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
@@ -9,37 +9,36 @@ const Upload = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState('');
-  const [selectedCategories, setSelectedCategories] = useState([]); // This will hold category IDs
+  const [category, setCategory] = useState('nature');
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
   const navigate = useNavigate();
 
-  // Update CATEGORY_CHOICES to use IDs
   const CATEGORY_CHOICES = [
-    { id: 1, value: 'nature', label: 'Nature' },
-    { id: 2, value: 'abstract', label: 'Abstract' },
-    { id: 3, value: 'technology', label: 'Technology' },
-    { id: 4, value: 'space', label: 'Space' },
-    { id: 5, value: 'animals', label: 'Animals' },
-    { id: 6, value: 'art', label: 'Art' },
-    { id: 7, value: 'funny', label: 'Funny' },
-    { id: 8, value: 'entertainment', label: 'Entertainment' },
-    { id: 9, value: 'sports', label: 'Sports' },
-    { id: 10, value: 'cars & vehicles', label: 'Cars & Vehicles' },
-    { id: 11, value: 'bollywood', label: 'Bollywood' },
-    { id: 12, value: 'hollywood', label: 'Hollywood' },
-    { id: 13, value: 'games', label: 'Games' },
-    { id: 14, value: 'music', label: 'Music' },
-    { id: 15, value: 'patterns', label: 'Patterns' },
-    { id: 16, value: 'anime', label: 'Anime' },
-    { id: 17, value: 'holiday', label: 'Holiday' },
+    { value: 'nature', label: 'Nature' },
+    { value: 'abstract', label: 'Abstract' },
+    { value: 'technology', label: 'Technology' },
+    { value: 'space', label: 'Space' },
+    { value: 'animals', label: 'Animals' },
+    { value: 'art', label: 'Art' },
+    { value: 'funny', label: 'Funny' },
+    { value: 'entertainment', label: 'Entertainment' },
+    { value: 'sports', label: 'Sports' },
+    { value: 'cars & vehicles', label: 'Cars & Vehicles' },
+    { value: 'bollywood', label: 'Bollywood' },
+    { value: 'hollywood', label: 'Hollywood' },
+    { value: 'games', label: 'Games' },
+    { value: 'music', label: 'Music' },
+    { value: 'patterns', label: 'Patterns' },
+    { value: 'anime', label: 'Anime' },
+    { value: 'holiday', label: 'Holiday' },
   ];
 
   // Fetch username from local storage when component mounts
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     if (userInfo && userInfo.name) {
-      setUsername(userInfo.name); // Set the username
+      setUsername(userInfo.name);  // Set the username
     }
   }, []);
 
@@ -51,18 +50,6 @@ const Upload = () => {
       alert('Please select a valid image file.');
       setSelectedFile(null);
     }
-  };
-
-  const handleCategoryChange = (id) => {
-    setSelectedCategories((prevCategories) => {
-      if (prevCategories.includes(id)) {
-        // Remove category if already selected
-        return prevCategories.filter((c) => c !== id);
-      } else {
-        // Add category to the list
-        return [...prevCategories, id];
-      }
-    });
   };
 
   const handleSubmit = async (e) => {
@@ -90,31 +77,28 @@ const Upload = () => {
       formData.append('title', title);
       formData.append('description', description);
       formData.append('tags', tags);
-      // Send category IDs directly without JSON.stringify
-      selectedCategories.forEach((id) => {
-          formData.append('category', id); // Append each ID separately
-      });
-      formData.append('uploaded_by', currentUser.username); // Use current user's username
+      formData.append('category', category);
+      formData.append('uploaded_by', username); // Automatically fill "uploaded_by" with username
 
-      // Make the POST request to your upload API
       const response = await fetch('https://walli-django-production.up.railway.app/api/wallpapers/', {
         method: 'POST',
         body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to upload image');
+      if (response.ok) {
+        alert('Image uploaded successfully!');
+        navigate('/');
+      } else {
+        const errorData = await response.json();
+        alert('Error uploading image: ' + JSON.stringify(errorData));
       }
-
-      alert('Image uploaded successfully');
-      navigate('/'); // Redirect to the homepage or wherever you want
     } catch (error) {
-      console.error(error);
-      alert('Error uploading image');
+      console.error('Upload error:', error);
+      alert('An error occurred: ' + error.message);
     } finally {
       setLoading(false);
     }
-};
+  };
 
   const currentUser = JSON.parse(localStorage.getItem('userInfo')); // Check if the user is logged in
 
@@ -147,27 +131,17 @@ const Upload = () => {
           onChange={(e) => setTags(e.target.value)}
           required
         />
-
-        {/* Checkbox for category selection */}
-        <div className="category-checkboxes">
+        <select value={category} onChange={(e) => setCategory(e.target.value)}>
           {CATEGORY_CHOICES.map((choice) => (
-            <label key={choice.id}>
-              <input
-                type="checkbox"
-                value={choice.id}
-                checked={selectedCategories.includes(choice.id)}
-                onChange={() => handleCategoryChange(choice.id)} // Change to ID
-              />
+            <option key={choice.value} value={choice.value}>
               {choice.label}
-            </label>
+            </option>
           ))}
-        </div>
-
+        </select>
         <input type="file" onChange={handleFileChange} />
         <button type="submit" disabled={loading}>Upload</button>
-
         {/* Automatically display the "Uploaded By" username */}
-        <p>Uploaded by: {username}</p>
+        <p>Uploaded by: {username}</p> 
       </form>
     </div>
   );

@@ -6,10 +6,10 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isCategoriesVisible, setCategoriesVisible] = useState(false);
-  const [searchQueryInput, setSearchQueryInput] = useState('');
+  const [searchQueryInput, setSearchQueryInput] = useState(''); 
   const [userInfo, setUserInfo] = useState(null);
   const [username, setUsername] = useState('');
-  const [selectedCategories, setSelectedCategories] = useState([]); // Store multiple selected categories
+  const [selectedCategory, setLocalSelectedCategory] = useState(''); 
   const [isLogoutVisible, setLogoutVisible] = useState(false);
 
   useEffect(() => {
@@ -24,13 +24,13 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
 
     // Extract category and search from URL parameters on initial load
     const params = new URLSearchParams(location.search);
-    const categoriesFromUrl = params.get('category')?.split(',') || []; // Handle multiple categories
+    const categoryFromUrl = params.get('category') || 'all'; 
     const searchFromUrl = params.get('search') || '';
 
-    setSelectedCategories(categoriesFromUrl);
-    setSearchQueryInput(searchFromUrl);
-    setSearchQuery(searchFromUrl);
-    setSelectedCategory(categoriesFromUrl.join(',')); // Pass the categories as a comma-separated string
+    setLocalSelectedCategory(categoryFromUrl); 
+    setSearchQueryInput(searchFromUrl); 
+    setSearchQuery(searchFromUrl); 
+    setSelectedCategory(categoryFromUrl); 
   }, [location.search, setSelectedCategory]);
 
   const toggleCategories = (event) => {
@@ -47,26 +47,23 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
   };
 
   const handleCategorySelection = (category) => {
-    let updatedCategories;
-    if (selectedCategories.includes(category)) {
-      updatedCategories = selectedCategories.filter((cat) => cat !== category);
-    } else {
-      updatedCategories = [...selectedCategories, category];
-    }
-    setSelectedCategories(updatedCategories);
-    navigate(`/?category=${updatedCategories.join(',')}`); // Navigate with selected categories
+    setLocalSelectedCategory(category); 
+    setSearchQueryInput(''); 
+    setSearchQuery(''); 
+    navigate(`/?category=${category}`);
+    closeCategories();
   };
 
   const handleSearch = (event) => {
     event.preventDefault();
-    setSearchQuery(searchQueryInput);
-    navigate(`/?search=${searchQueryInput}`);
+    setSearchQuery(searchQueryInput); 
+    navigate(`/?search=${searchQueryInput}`); 
   };
 
   const handleSecondarySearch = (event) => {
     event.preventDefault();
-    setSearchQuery(searchQueryInput);
-    navigate(`/?search=${searchQueryInput}`);
+    setSearchQuery(searchQueryInput); 
+    navigate(`/?search=${searchQueryInput}`); 
   };
 
   const handleLogout = () => {
@@ -74,14 +71,14 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
     setUsername('');
     localStorage.removeItem('userInfo');
     localStorage.removeItem('username');
-    setLogoutVisible(false);
+    setLogoutVisible(false); 
   };
 
   const handleUploadClick = () => {
     if (userInfo) {
-      navigate('/upload');
+      navigate('/upload'); 
     } else {
-      navigate('/signin');
+      navigate('/signin'); 
     }
   };
 
@@ -91,8 +88,8 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
 
     if (
       isCategoriesVisible &&
-      !categoriesContainer.contains(event.target) &&
-      !hamburger.contains(event.target)
+      !categoriesContainer.contains(event.target) && 
+      !hamburger.contains(event.target) 
     ) {
       closeCategories();
     }
@@ -103,10 +100,9 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
     return () => {
       document.removeEventListener('click', handleDocumentClick);
     };
-  }, [isCategoriesVisible]);
-
+  }, [isCategoriesVisible]); 
   const toggleLogoutVisibility = () => {
-    setLogoutVisible((prevState) => !prevState);
+    setLogoutVisible((prevState) => !prevState); 
   };
 
   return (
@@ -122,15 +118,8 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
           <ul id="categoriesList">
             {['all', 'Funny', 'Entertainment', 'Nature', 'Sports', 'Cars & Vehicles', 'Animals', 'Bollywood', 'Hollywood', 'Games', 'Technology', 'Music', 'Drawing', 'Brands', 'Patterns', 'Anime', 'Holiday']
               .map((category) => (
-                <li key={category}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={selectedCategories.includes(category)}
-                      onChange={() => handleCategorySelection(category)}
-                    />
-                    {category.charAt(0).toUpperCase() + category.slice(1)}
-                  </label>
+                <li key={category} onClick={() => handleCategorySelection(category)}>
+                  {category.charAt(0).toUpperCase() + category.slice(1)}
                 </li>
               ))}
           </ul>
@@ -141,7 +130,7 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
               <input
                 type="text"
                 value={searchQueryInput}
-                onChange={(e) => setSearchQueryInput(e.target.value)}
+                onChange={(e) => setSearchQueryInput(e.target.value)} 
                 placeholder="Search W A L L I"
                 aria-label="Search"
               />
@@ -152,22 +141,23 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
           </form>
         </div>
 
+
         <div className="credentials">
           <a href="#" id="upload-button" onClick={handleUploadClick}>
             <i className="fa-solid fa-arrow-up-from-bracket"></i>
             <span id='upload-txt'> Upload</span>
           </a>
           {userInfo ? (
-            <div className="user-info">
-              <img src={userInfo.picture} alt="Profile" className="profile-picture" />
-              <span onClick={() => navigate('/profile')}>{username}</span>
-            </div>
-          ) : (
-            <a onClick={() => navigate('/signin')} href="#">
-              <i className="fa-regular fa-user"></i>
-              <span> Sign in</span>
-            </a>
-          )}
+                <div className="user-info">
+                  <img src={userInfo.picture} alt="Profile" className="profile-picture" />
+                  <span onClick={() => navigate('/profile')}>{username}</span> 
+                </div>
+              ) : (
+                <a onClick={() => navigate('/signin')} href="#">
+                  <i className="fa-regular fa-user"></i>
+                  <span> Sign in</span>
+                </a>
+              )}
         </div>
       </nav>
 
@@ -177,7 +167,7 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
           <input
             type="text"
             value={searchQueryInput}
-            onChange={(e) => setSearchQueryInput(e.target.value)}
+            onChange={(e) => setSearchQueryInput(e.target.value)} 
             placeholder="Search W A L L I"
             aria-label="Search"
           />
@@ -187,19 +177,18 @@ const Navbar = ({ setSelectedCategory, setSearchQuery }) => {
         </form>
       </div>
 
-      {/* Secondary Navbar */}
-      <div className="secondary-navbar" id="secondaryNavbar">
-        <div className="navbar-content">
-          <span>Wallpapers</span>
-          {selectedCategories.length > 0 && <span className="separator"> / </span>}
-          {selectedCategories.map((category, index) => (
-            <span key={index} className="selected-category">
-              {category.charAt(0).toUpperCase() + category.slice(1)}
-              {index < selectedCategories.length - 1 && ', '}
-            </span>
-          ))}
-        </div>
-      </div>
+     {/* Secondary Navbar */}
+<div className="secondary-navbar" id="secondaryNavbar">
+  <div className="navbar-content">
+    <span>Wallpapers</span>
+    {selectedCategory && <span className="separator"> / </span>}  
+    {selectedCategory && <span className="selected-category">{selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}</span>}
+  </div>
+</div>
+
+
+
+
     </header>
   );
 };
