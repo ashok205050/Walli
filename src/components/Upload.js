@@ -97,7 +97,7 @@ const Upload = () => {
       formData.append('uploaded_by', currentUser.username); // Use current user's username
 
       // Make the POST request to your upload API
-      const response = await fetch('/api/upload/', {
+      const response = await fetch('https://walli-django-production.up.railway.app/api/wallpapers/', {
         method: 'POST',
         body: formData,
       });
