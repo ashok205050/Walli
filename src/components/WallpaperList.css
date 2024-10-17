@@ -73,14 +73,14 @@
 
 @media (max-width: 576px) {
   .wallpaper-container {
-    grid-template-columns: repeat(2, 1fr); 
+    grid-template-columns: repeat(3, 1fr); 
     padding: 0 20px;
   }
 }
 
 @media (max-width: 400px) {
   .wallpaper-container {
-    grid-template-columns: repeat(1, 1fr); 
+    grid-template-columns: repeat(3, 1fr); 
     padding: 0 10px; 
   }
 }
