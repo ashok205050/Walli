@@ -9,29 +9,30 @@ const Upload = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState('');
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]); // This will hold category IDs
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
   const navigate = useNavigate();
 
+  // Update CATEGORY_CHOICES to use IDs
   const CATEGORY_CHOICES = [
-    { value: 'nature', label: 'Nature' },
-    { value: 'abstract', label: 'Abstract' },
-    { value: 'technology', label: 'Technology' },
-    { value: 'space', label: 'Space' },
-    { value: 'animals', label: 'Animals' },
-    { value: 'art', label: 'Art' },
-    { value: 'funny', label: 'Funny' },
-    { value: 'entertainment', label: 'Entertainment' },
-    { value: 'sports', label: 'Sports' },
-    { value: 'cars & vehicles', label: 'Cars & Vehicles' },
-    { value: 'bollywood', label: 'Bollywood' },
-    { value: 'hollywood', label: 'Hollywood' },
-    { value: 'games', label: 'Games' },
-    { value: 'music', label: 'Music' },
-    { value: 'patterns', label: 'Patterns' },
-    { value: 'anime', label: 'Anime' },
-    { value: 'holiday', label: 'Holiday' },
+    { id: 1, value: 'nature', label: 'Nature' },
+    { id: 2, value: 'abstract', label: 'Abstract' },
+    { id: 3, value: 'technology', label: 'Technology' },
+    { id: 4, value: 'space', label: 'Space' },
+    { id: 5, value: 'animals', label: 'Animals' },
+    { id: 6, value: 'art', label: 'Art' },
+    { id: 7, value: 'funny', label: 'Funny' },
+    { id: 8, value: 'entertainment', label: 'Entertainment' },
+    { id: 9, value: 'sports', label: 'Sports' },
+    { id: 10, value: 'cars & vehicles', label: 'Cars & Vehicles' },
+    { id: 11, value: 'bollywood', label: 'Bollywood' },
+    { id: 12, value: 'hollywood', label: 'Hollywood' },
+    { id: 13, value: 'games', label: 'Games' },
+    { id: 14, value: 'music', label: 'Music' },
+    { id: 15, value: 'patterns', label: 'Patterns' },
+    { id: 16, value: 'anime', label: 'Anime' },
+    { id: 17, value: 'holiday', label: 'Holiday' },
   ];
 
   // Fetch username from local storage when component mounts
@@ -52,14 +53,14 @@ const Upload = () => {
     }
   };
 
-  const handleCategoryChange = (category) => {
+  const handleCategoryChange = (id) => {
     setSelectedCategories((prevCategories) => {
-      if (prevCategories.includes(category)) {
+      if (prevCategories.includes(id)) {
         // Remove category if already selected
-        return prevCategories.filter((c) => c !== category);
+        return prevCategories.filter((c) => c !== id);
       } else {
         // Add category to the list
-        return [...prevCategories, category];
+        return [...prevCategories, id];
       }
     });
   };
@@ -89,7 +90,7 @@ const Upload = () => {
       formData.append('title', title);
       formData.append('description', description);
       formData.append('tags', tags);
-      formData.append('category', JSON.stringify(selectedCategories)); // Send categories as an array
+      formData.append('category', JSON.stringify(selectedCategories)); // Send category IDs as an array
       formData.append('uploaded_by', username); // Automatically fill "uploaded_by" with username
 
       const response = await fetch('https://walli-django-production.up.railway.app/api/wallpapers/', {
@@ -147,12 +148,12 @@ const Upload = () => {
         {/* Checkbox for category selection */}
         <div className="category-checkboxes">
           {CATEGORY_CHOICES.map((choice) => (
-            <label key={choice.value}>
+            <label key={choice.id}>
               <input
                 type="checkbox"
-                value={choice.value}
-                checked={selectedCategories.includes(choice.value)}
-                onChange={() => handleCategoryChange(choice.value)}
+                value={choice.id}
+                checked={selectedCategories.includes(choice.id)}
+                onChange={() => handleCategoryChange(choice.id)} // Change to ID
               />
               {choice.label}
             </label>
