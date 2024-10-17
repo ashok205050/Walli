@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { storage } from './firebaseConfig'; 
+import { storage } from './firebaseConfig';
 import './Upload.css';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
@@ -9,7 +9,7 @@ const Upload = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState('');
-  const [category, setCategory] = useState('nature');
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
   const navigate = useNavigate();
@@ -38,7 +38,7 @@ const Upload = () => {
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     if (userInfo && userInfo.name) {
-      setUsername(userInfo.name);  // Set the username
+      setUsername(userInfo.name); // Set the username
     }
   }, []);
 
@@ -50,6 +50,18 @@ const Upload = () => {
       alert('Please select a valid image file.');
       setSelectedFile(null);
     }
+  };
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategories((prevCategories) => {
+      if (prevCategories.includes(category)) {
+        // Remove category if already selected
+        return prevCategories.filter((c) => c !== category);
+      } else {
+        // Add category to the list
+        return [...prevCategories, category];
+      }
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -77,7 +89,7 @@ const Upload = () => {
       formData.append('title', title);
       formData.append('description', description);
       formData.append('tags', tags);
-      formData.append('category', category);
+      formData.append('category', JSON.stringify(selectedCategories)); // Send categories as an array
       formData.append('uploaded_by', username); // Automatically fill "uploaded_by" with username
 
       const response = await fetch('https://walli-django-production.up.railway.app/api/wallpapers/', {
@@ -131,17 +143,27 @@ const Upload = () => {
           onChange={(e) => setTags(e.target.value)}
           required
         />
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+
+        {/* Checkbox for category selection */}
+        <div className="category-checkboxes">
           {CATEGORY_CHOICES.map((choice) => (
-            <option key={choice.value} value={choice.value}>
+            <label key={choice.value}>
+              <input
+                type="checkbox"
+                value={choice.value}
+                checked={selectedCategories.includes(choice.value)}
+                onChange={() => handleCategoryChange(choice.value)}
+              />
               {choice.label}
-            </option>
+            </label>
           ))}
-        </select>
+        </div>
+
         <input type="file" onChange={handleFileChange} />
         <button type="submit" disabled={loading}>Upload</button>
+
         {/* Automatically display the "Uploaded By" username */}
-        <p>Uploaded by: {username}</p> 
+        <p>Uploaded by: {username}</p>
       </form>
     </div>
   );
