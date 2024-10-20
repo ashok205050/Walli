@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './WallpaperList.css';
 
 const WallpaperList = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const [wallpapers, setWallpapers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [visibleCount, setVisibleCount] = useState(24); // Start with 24 wallpapers
@@ -39,10 +38,13 @@ const WallpaperList = () => {
       }
 
       const data = await response.json();
-      // Sort wallpapers by uploaded_at in descending order
       const sortedWallpapers = data.results || [];
       sortedWallpapers.sort((a, b) => new Date(b.uploaded_at) - new Date(a.uploaded_at));
       setWallpapers(sortedWallpapers);
+      // Save wallpapers to sessionStorage
+      sessionStorage.setItem('wallpapers', JSON.stringify(sortedWallpapers));
+      sessionStorage.setItem('category', category);
+      sessionStorage.setItem('searchQuery', search);
     } catch (error) {
       console.error("Error fetching wallpapers:", error);
     } finally {
@@ -51,41 +53,27 @@ const WallpaperList = () => {
   };
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const categoryFromUrl = params.get('category') || 'all';
-    const searchFromUrl = params.get('search') || '';
+    const cachedWallpapers = sessionStorage.getItem('wallpapers');
+    const cachedCategory = sessionStorage.getItem('category') || 'all';
+    const cachedSearchQuery = sessionStorage.getItem('searchQuery') || '';
 
-    setSelectedCategory(categoryFromUrl);
-    setSearchQuery(searchFromUrl);
+    if (cachedWallpapers) {
+      // Use cached data from sessionStorage
+      setWallpapers(JSON.parse(cachedWallpapers));
+      setSelectedCategory(cachedCategory);
+      setSearchQuery(cachedSearchQuery);
+    } else {
+      // If no cache, fetch the data
+      const params = new URLSearchParams(location.search);
+      const categoryFromUrl = params.get('category') || 'all';
+      const searchFromUrl = params.get('search') || '';
 
-    fetchWallpapers(categoryFromUrl, searchFromUrl);
+      setSelectedCategory(categoryFromUrl);
+      setSearchQuery(searchFromUrl);
+
+      fetchWallpapers(categoryFromUrl, searchFromUrl);
+    }
   }, [location.search]);
-
-  const handleCategoryChange = (e) => {
-    const newCategory = e.target.value;
-    setSelectedCategory(newCategory);
-    updateUrlParams(newCategory, searchQuery); // Update URL with new category and search
-  };
-
-  const handleSearchChange = (e) => {
-    const searchValue = e.target.value;
-    setSearchQuery(searchValue);
-    updateUrlParams(selectedCategory, searchValue); // Update URL with new search and category
-  };
-
-  const updateUrlParams = (category, search) => {
-    const params = new URLSearchParams();
-    if (category !== 'all') {
-      params.set('category', category);
-    }
-    if (search) {
-      params.set('search', search);
-    }
-    navigate({
-      pathname: location.pathname,
-      search: params.toString(),
-    });
-  };
 
   const loadMore = () => {
     setVisibleCount((prevCount) => {
@@ -96,22 +84,6 @@ const WallpaperList = () => {
 
   return (
     <div className="wallpaper-container">
-      <div className="filters">
-        <select value={selectedCategory} onChange={handleCategoryChange}>
-          <option value="all">All</option>
-          <option value="nature">Nature</option>
-          <option value="technology">Technology</option>
-          {/* Add more categories as needed */}
-        </select>
-
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={handleSearchChange}
-          placeholder="Search wallpapers..."
-        />
-      </div>
-
       {loading && <p>Loading...</p>}
       {!loading && wallpapers.length === 0 && (
         <p>No wallpapers found for the selected category or search query.</p>
