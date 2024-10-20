@@ -46,6 +46,7 @@ const WallpaperList = () => {
       sessionStorage.setItem('wallpapers', JSON.stringify(sortedWallpapers));
       sessionStorage.setItem('category', category);
       sessionStorage.setItem('searchQuery', search);
+      sessionStorage.setItem('visibleCount', visibleCount.toString());
     } catch (error) {
       console.error("Error fetching wallpapers:", error);
     } finally {
@@ -59,6 +60,7 @@ const WallpaperList = () => {
     const searchFromUrl = params.get('search') || '';
 
     const cachedWallpapers = sessionStorage.getItem('wallpapers');
+    const cachedVisibleCount = sessionStorage.getItem('visibleCount') || '24';
     const cachedCategory = sessionStorage.getItem('category');
     const cachedSearchQuery = sessionStorage.getItem('searchQuery');
 
@@ -69,6 +71,7 @@ const WallpaperList = () => {
     ) {
       // Use cached data if the search query and category haven't changed
       setWallpapers(JSON.parse(cachedWallpapers));
+      setVisibleCount(Number(cachedVisibleCount));
     } else {
       // Fetch wallpapers if no cached data or search/category has changed
       fetchWallpapers(categoryFromUrl, searchFromUrl);
@@ -83,6 +86,9 @@ const WallpaperList = () => {
       const newCount = prevCount + 20;
       return newCount > wallpapers.length ? wallpapers.length : newCount;
     });
+
+    // Update sessionStorage for the visibleCount when loading more
+    sessionStorage.setItem('visibleCount', (visibleCount + 20).toString());
   };
 
   return (
