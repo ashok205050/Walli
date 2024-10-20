@@ -311,7 +311,7 @@
   color: gray;
 }
 
-.profile-picture {
+.user-info .profile-picture {
   width: 30px;
   height: 30px;
   border-radius: 50%;
