@@ -45,7 +45,7 @@ const ProfilePage = () => {
   return (
     <div className="profile-page">
       <h1>Profile</h1>
-      <div className="profile-picture">
+      <div className="mprofile-picture">
         <img
           src={userInfo.picture || '/default-profile.png'} // Default profile picture
           alt="Profile"

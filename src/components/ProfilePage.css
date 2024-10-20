@@ -17,14 +17,14 @@ h1 {
   margin-bottom: 20px;
 }
 
-.profile-picture {
+.mprofile-picture {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 30px;
 }
 
-.profile-picture img {
+.mprofile-picture img {
   width: 130px;
   height: 130px;
   border-radius: 50%;
@@ -33,11 +33,11 @@ h1 {
   margin-bottom: 15px;
 }
 
-.profile-picture input[type="file"] {
+.mprofile-picture input[type="file"] {
   display: none; /* Hide file input */
 }
 
-.profile-picture label {
+.mprofile-picture label {
   color: #ffffff;
   background-color: #007bff;
   padding: 8px 16px;
@@ -46,7 +46,7 @@ h1 {
   transition: background-color 0.3s;
 }
 
-.profile-picture label:hover {
+.mprofile-picture label:hover {
   background-color: #0056b3;
 }
 
@@ -118,7 +118,7 @@ h1 {
     font-size: 24px;
   }
 
-  .profile-picture img {
+  .mprofile-picture img {
     width: 110px;
     height: 110px;
   }
@@ -130,7 +130,7 @@ h1 {
     margin: 20px auto;
   }
 
-  .profile-picture img {
+  .mprofile-picture img {
     width: 90px;
     height: 90px;
   }
