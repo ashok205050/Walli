@@ -23,9 +23,6 @@
   width: 100%;
   margin-top: 20px;
   padding-left: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .details h2 {
@@ -72,10 +69,6 @@
 
 
 @media (max-width: 767px) {
-  .details{
-    justify-content: center;
-    align-items: center;
-  }
   .image {
     max-width: 100%; 
   }
