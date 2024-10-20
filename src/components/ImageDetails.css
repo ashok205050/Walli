@@ -6,20 +6,28 @@
   margin: 20px auto;
   max-width: 1200px;
   padding: 20px;
-  background-color: #2c2c2c; /* Darker background for better contrast */
+  background-color: #2c2c2c;
   border-radius: 15px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.image {
+  width: 100%;
+  max-width: 600px; /* Limit image width for better balance */
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
 }
 
 .details {
   width: 100%;
   margin-top: 20px;
-  padding-left: 100px;
+  padding: 0 20px; /* Adjust padding for better spacing */
 }
 
 .details h2 {
   margin-bottom: 20px;
-  font-size: 28px;
+  font-size: 26px;
   color: #e6e6e6;
   font-weight: 700;
   letter-spacing: 1px;
@@ -33,13 +41,13 @@
 }
 
 .details p strong {
-  color: #ffffff; /* Highlighting the labels */
+  color: #ffffff;
   font-weight: 600;
 }
 
 .download-button {
   padding: 12px 25px;
-  background-color: #ff7f50; /* Coral button color for contrast */
+  background-color: #ff7f50;
   color: #ffffff;
   border: none;
   border-radius: 25px;
@@ -47,12 +55,12 @@
   font-size: 16px;
   font-weight: bold;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 4px 10px rgba(255, 127, 80, 0.5); /* Soft button shadow */
+  box-shadow: 0 4px 10px rgba(255, 127, 80, 0.5);
 }
 
 .download-button:hover {
-  background-color: #ff5722; /* Darker hover color */
-  transform: scale(1.05); /* Slight zoom on hover */
+  background-color: #ff5722;
+  transform: scale(1.05);
 }
 
 .download-button:active {
@@ -61,7 +69,7 @@
 }
 
 .details a {
-  color: #66b3ff; /* Light blue for the username link */
+  color: #66b3ff;
   text-decoration: none;
   font-weight: bold;
 }
@@ -74,16 +82,31 @@
   .image-details-container {
     flex-direction: row;
     justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .image {
+    width: 50%;
+    margin-right: 20px; /* Adds space between the image and details */
   }
 
   .details {
-    width: 50%;
+    width: 50%; 
     margin-top: 0;
     padding-left: 40px;
   }
 }
 
 @media (max-width: 767px) {
+  .image {
+    width: 100%; /* Ensures the image fits well on mobile */
+    margin-bottom: 20px; /* Adds spacing between the image and details */
+  }
+
+  .details {
+    padding: 0 10px; /* Adjusts padding for smaller screens */
+  }
+
   .details h2 {
     font-size: 22px;
   }
@@ -94,6 +117,6 @@
 
   .download-button {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
   }
 }
