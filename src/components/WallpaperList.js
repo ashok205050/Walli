@@ -41,7 +41,8 @@ const WallpaperList = () => {
       const sortedWallpapers = data.results || [];
       sortedWallpapers.sort((a, b) => new Date(b.uploaded_at) - new Date(a.uploaded_at));
       setWallpapers(sortedWallpapers);
-      // Save wallpapers to sessionStorage
+
+      // Save to sessionStorage
       sessionStorage.setItem('wallpapers', JSON.stringify(sortedWallpapers));
       sessionStorage.setItem('category', category);
       sessionStorage.setItem('searchQuery', search);
@@ -53,26 +54,28 @@ const WallpaperList = () => {
   };
 
   useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const categoryFromUrl = params.get('category') || 'all';
+    const searchFromUrl = params.get('search') || '';
+
     const cachedWallpapers = sessionStorage.getItem('wallpapers');
-    const cachedCategory = sessionStorage.getItem('category') || 'all';
-    const cachedSearchQuery = sessionStorage.getItem('searchQuery') || '';
+    const cachedCategory = sessionStorage.getItem('category');
+    const cachedSearchQuery = sessionStorage.getItem('searchQuery');
 
-    if (cachedWallpapers) {
-      // Use cached data from sessionStorage
+    if (
+      cachedWallpapers &&
+      cachedCategory === categoryFromUrl &&
+      cachedSearchQuery === searchFromUrl
+    ) {
+      // Use cached data if the search query and category haven't changed
       setWallpapers(JSON.parse(cachedWallpapers));
-      setSelectedCategory(cachedCategory);
-      setSearchQuery(cachedSearchQuery);
     } else {
-      // If no cache, fetch the data
-      const params = new URLSearchParams(location.search);
-      const categoryFromUrl = params.get('category') || 'all';
-      const searchFromUrl = params.get('search') || '';
-
-      setSelectedCategory(categoryFromUrl);
-      setSearchQuery(searchFromUrl);
-
+      // Fetch wallpapers if no cached data or search/category has changed
       fetchWallpapers(categoryFromUrl, searchFromUrl);
     }
+
+    setSelectedCategory(categoryFromUrl);
+    setSearchQuery(searchFromUrl);
   }, [location.search]);
 
   const loadMore = () => {
@@ -91,7 +94,7 @@ const WallpaperList = () => {
       {wallpapers.slice(0, visibleCount).map((wallpaper) => (
         <div className="wallpaper-item" key={wallpaper.id}>
           <Link to={`/image/${wallpaper.id}`}>
-            <img src={wallpaper.image} alt={wallpaper.title} />
+            <img src={wallpaper.image} alt={wallpaper.title} /> {/* Updated to use image field */}
           </Link>
         </div>
       ))}
