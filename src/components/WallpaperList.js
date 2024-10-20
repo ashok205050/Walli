@@ -94,7 +94,7 @@ const WallpaperList = () => {
       {wallpapers.slice(0, visibleCount).map((wallpaper) => (
         <div className="wallpaper-item" key={wallpaper.id}>
           <Link to={`/image/${wallpaper.id}`}>
-            <img src={wallpaper.image} alt={wallpaper.title} /> {/* Updated to use image field */}
+            <img src={wallpaper.image} alt={wallpaper.title} />
           </Link>
         </div>
       ))}
