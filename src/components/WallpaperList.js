@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './WallpaperList.css';
 
 const WallpaperList = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [wallpapers, setWallpapers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [visibleCount, setVisibleCount] = useState(24); // Start with 24 wallpapers
@@ -42,12 +43,6 @@ const WallpaperList = () => {
       const sortedWallpapers = data.results || [];
       sortedWallpapers.sort((a, b) => new Date(b.uploaded_at) - new Date(a.uploaded_at));
       setWallpapers(sortedWallpapers);
-
-      // Save to localStorage for preserving the state
-      localStorage.setItem('wallpapers', JSON.stringify(sortedWallpapers));
-      localStorage.setItem('selectedCategory', category);
-      localStorage.setItem('searchQuery', search);
-      localStorage.setItem('visibleCount', visibleCount.toString());
     } catch (error) {
       console.error("Error fetching wallpapers:", error);
     } finally {
@@ -56,43 +51,67 @@ const WallpaperList = () => {
   };
 
   useEffect(() => {
-    // Check if data is available in localStorage
-    const cachedWallpapers = localStorage.getItem('wallpapers');
-    const cachedCategory = localStorage.getItem('selectedCategory') || 'all';
-    const cachedSearchQuery = localStorage.getItem('searchQuery') || '';
-    const cachedVisibleCount = localStorage.getItem('visibleCount') || 24;
+    const params = new URLSearchParams(location.search);
+    const categoryFromUrl = params.get('category') || 'all';
+    const searchFromUrl = params.get('search') || '';
 
-    if (cachedWallpapers) {
-      // Use cached data
-      setWallpapers(JSON.parse(cachedWallpapers));
-      setSelectedCategory(cachedCategory);
-      setSearchQuery(cachedSearchQuery);
-      setVisibleCount(Number(cachedVisibleCount));
-    } else {
-      // Fetch data if no cache exists
-      const params = new URLSearchParams(location.search);
-      const categoryFromUrl = params.get('category') || 'all';
-      const searchFromUrl = params.get('search') || '';
+    setSelectedCategory(categoryFromUrl);
+    setSearchQuery(searchFromUrl);
 
-      setSelectedCategory(categoryFromUrl);
-      setSearchQuery(searchFromUrl);
-
-      fetchWallpapers(categoryFromUrl, searchFromUrl);
-    }
+    fetchWallpapers(categoryFromUrl, searchFromUrl);
   }, [location.search]);
+
+  const handleCategoryChange = (e) => {
+    const newCategory = e.target.value;
+    setSelectedCategory(newCategory);
+    updateUrlParams(newCategory, searchQuery); // Update URL with new category and search
+  };
+
+  const handleSearchChange = (e) => {
+    const searchValue = e.target.value;
+    setSearchQuery(searchValue);
+    updateUrlParams(selectedCategory, searchValue); // Update URL with new search and category
+  };
+
+  const updateUrlParams = (category, search) => {
+    const params = new URLSearchParams();
+    if (category !== 'all') {
+      params.set('category', category);
+    }
+    if (search) {
+      params.set('search', search);
+    }
+    navigate({
+      pathname: location.pathname,
+      search: params.toString(),
+    });
+  };
 
   const loadMore = () => {
     setVisibleCount((prevCount) => {
       const newCount = prevCount + 20;
       return newCount > wallpapers.length ? wallpapers.length : newCount;
     });
-
-    // Update localStorage for the visibleCount when loading more
-    localStorage.setItem('visibleCount', (visibleCount + 20).toString());
   };
 
   return (
     <div className="wallpaper-container">
+      <div className="filters">
+        <select value={selectedCategory} onChange={handleCategoryChange}>
+          <option value="all">All</option>
+          <option value="nature">Nature</option>
+          <option value="technology">Technology</option>
+          {/* Add more categories as needed */}
+        </select>
+
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          placeholder="Search wallpapers..."
+        />
+      </div>
+
       {loading && <p>Loading...</p>}
       {!loading && wallpapers.length === 0 && (
         <p>No wallpapers found for the selected category or search query.</p>
