@@ -8,6 +8,7 @@ const ProfilePage = () => {
   const [userInfo, setUserInfo] = useState({ username: '', bio: '', profile_picture: '' });
   const [editMode, setEditMode] = useState(false);
 
+  // Fetch user profile on component mount
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -16,25 +17,29 @@ const ProfilePage = () => {
             'Authorization': `Bearer ${localStorage.getItem('access_token')}`
           }
         });
-        setUserInfo(response.data);
+        setUserInfo(response.data);  // Update state with fetched user data
       } catch (error) {
-        navigate('/signin');
+        console.error("Failed to fetch user profile", error);
+        navigate('/signin'); // Redirect to sign-in on error
       }
     };
 
     fetchUserProfile();
   }, [navigate]);
 
+  // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserInfo({ ...userInfo, [name]: value });
   };
 
+  // Handle profile picture change
   const handlePictureChange = (e) => {
     const file = e.target.files[0];
     setUserInfo({ ...userInfo, profile_picture: file });
   };
 
+  // Save updated profile
   const handleSave = async () => {
     const formData = new FormData();
     formData.append('bio', userInfo.bio);
@@ -56,6 +61,7 @@ const ProfilePage = () => {
     }
   };
 
+  // Handle user logout
   const handleLogout = () => {
     localStorage.removeItem('access_token');
     navigate('/signin');
@@ -66,7 +72,7 @@ const ProfilePage = () => {
       <h1>Profile</h1>
       <div className="profile-picture">
         <img
-          src={userInfo.profile_picture || '/default-profile.png'}
+          src={userInfo.profile_picture || '/default-profile.png'} // Ensure this path is correct
           alt="Profile"
           style={{ width: '100px', height: '100px', borderRadius: '50%' }}
         />
