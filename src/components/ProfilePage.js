@@ -37,7 +37,6 @@ const ProfilePage = () => {
 
   const handleSave = async () => {
     const formData = new FormData();
-    formData.append('username', userInfo.username);
     formData.append('bio', userInfo.bio);
     if (userInfo.profile_picture) {
       formData.append('profile_picture', userInfo.profile_picture);
@@ -85,16 +84,7 @@ const ProfilePage = () => {
       </div>
       <div className="profile-details">
         <label>Username:</label>
-        {editMode ? (
-          <input
-            name="username"
-            value={userInfo.username}
-            onChange={handleInputChange}
-            placeholder="Enter your username"
-          />
-        ) : (
-          <p>{userInfo.username}</p>
-        )}
+        <p>{userInfo.username}</p>
         <label>Bio:</label>
         {editMode ? (
           <textarea
