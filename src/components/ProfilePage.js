@@ -1,3 +1,4 @@
+// ProfilePage.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -5,7 +6,7 @@ import './ProfilePage.css';
 
 const ProfilePage = () => {
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState({ username: '', bio: '', picture: '' });
+  const [userInfo, setUserInfo] = useState({ username: '', bio: '', profile_picture: '' });
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
@@ -30,27 +31,29 @@ const ProfilePage = () => {
     setUserInfo({ ...userInfo, [name]: value });
   };
 
+  const handlePictureChange = (e) => {
+    const file = e.target.files[0];
+    setUserInfo({ ...userInfo, profile_picture: file });
+  };
+
   const handleSave = async () => {
+    const formData = new FormData();
+    formData.append('username', userInfo.username);
+    formData.append('bio', userInfo.bio);
+    if (userInfo.profile_picture) {
+      formData.append('profile_picture', userInfo.profile_picture);
+    }
+
     try {
-      await axios.put('/api/profile/', userInfo, {
+      await axios.put('/api/profile/', formData, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+          'Content-Type': 'multipart/form-data',
         }
       });
       setEditMode(false);
     } catch (error) {
       console.error("Failed to update profile", error);
-    }
-  };
-
-  const handlePictureChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onload = (upload) => {
-      setUserInfo({ ...userInfo, profile_picture: upload.target.result });
-    };
-    if (file) {
-      reader.readAsDataURL(file);
     }
   };
 
