@@ -30,20 +30,20 @@ const ProfilePage = () => {
   // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUserInfo({ ...userInfo, [name]: value });
+    setUserInfo((prevInfo) => ({ ...prevInfo, [name]: value }));
   };
 
   // Handle profile picture change
   const handlePictureChange = (e) => {
     const file = e.target.files[0];
-    setUserInfo({ ...userInfo, profile_picture: file });
+    setUserInfo((prevInfo) => ({ ...prevInfo, profile_picture: file }));
   };
 
   // Save updated profile
   const handleSave = async () => {
     const formData = new FormData();
-    formData.append('bio', userInfo.bio);
-    if (userInfo.profile_picture) {
+    formData.append('bio', userInfo.bio);  // Append bio to FormData
+    if (userInfo.profile_picture instanceof File) {  // Ensure profile picture is a file
       formData.append('profile_picture', userInfo.profile_picture);
     }
 
@@ -72,7 +72,7 @@ const ProfilePage = () => {
       <h1>Profile</h1>
       <div className="profile-picture">
         <img
-          src={userInfo.profile_picture || '/default-profile.png'} // Ensure this path is correct
+          src={userInfo.profile_picture ? userInfo.profile_picture : '/default-profile.png'} // Provide a default image if none exists
           alt="Profile"
           style={{ width: '100px', height: '100px', borderRadius: '50%' }}
         />
