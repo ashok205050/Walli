@@ -1,3 +1,4 @@
+// ResetPasswordConfirm.js
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './ResetPasswordConfirm.css';
@@ -31,9 +32,10 @@ const ResetPasswordConfirm = () => {
       body: JSON.stringify({ uid, token, new_password: newPassword }), // Use new_password as key
     })
       .then((response) => {
+        // Check if the response is okay
         if (!response.ok) {
-          return response.json().then(data => {
-            throw new Error(data.error || 'Failed to reset password. Please try again.');
+          return response.text().then((text) => {
+            throw new Error(text || 'Failed to reset password. Please try again.');
           });
         }
         return response.json();
