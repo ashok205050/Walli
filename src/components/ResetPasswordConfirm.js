@@ -1,4 +1,3 @@
-// ResetPasswordConfirm.js
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './ResetPasswordConfirm.css';
@@ -24,12 +23,12 @@ const ResetPasswordConfirm = () => {
     }
 
     // API call to reset password
-    fetch('https://walli-django-production.up.railway.app/api/password-reset-confirm/', { // Backend URL
+    fetch(`https://walli-django-production.up.railway.app/api/password-reset-confirm/${uid}/${token}/`, { // Updated Backend URL
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ uid, token, new_password: newPassword }), // Use new_password as key
+      body: JSON.stringify({ new_password: newPassword }), // Use new_password as key
     })
       .then((response) => {
         // Check if the response is okay
