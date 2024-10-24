@@ -72,7 +72,7 @@ const ProfilePage = () => {
       <h1>Profile</h1>
       <div className="profile-picture">
         <img
-          src={userInfo.profile_picture ? userInfo.profile_picture : '/default-profile.png'} // Provide a default image if none exists
+          src={userInfo.profile_picture || '/default-profile.png'} // Provide a default image if none exists
           alt="Profile"
           style={{ width: '100px', height: '100px', borderRadius: '50%' }}
         />
