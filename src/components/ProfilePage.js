@@ -12,7 +12,7 @@ const ProfilePage = () => {
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const response = await axios.get('/profile/', {  // Adjusted URL to match Django path
+                const response = await axios.get('/profile/', {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('access_token')}`
                     }
@@ -49,7 +49,7 @@ const ProfilePage = () => {
         }
 
         try {
-            const response = await axios.put('/profile/', formData, {  // Adjusted URL to match Django path
+            const response = await axios.put('/profile/', formData, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
                     'Content-Type': 'multipart/form-data',
@@ -68,7 +68,12 @@ const ProfilePage = () => {
 
     // Handle user logout
     const handleLogout = () => {
+        // Clear local storage
         localStorage.removeItem('access_token');
+        // Clear session storage if used
+        sessionStorage.clear();
+        
+        // Redirect to the login page
         navigate('/signin');
     };
 
