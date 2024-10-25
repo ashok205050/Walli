@@ -12,7 +12,7 @@ const ProfilePage = () => {
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const response = await axios.get('https://walli-django-production.up.railway.app/api/profile/', {  // Adjusted URL to match Django path
+                const response = await axios.get('/profile/', {  // Adjusted URL to match Django path
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('access_token')}`
                     }
@@ -49,7 +49,7 @@ const ProfilePage = () => {
         }
 
         try {
-            const response = await axios.put('https://walli-django-production.up.railway.app/api/profile/', formData, {  // Adjusted URL to match Django path
+            const response = await axios.put('/profile/', formData, {  // Adjusted URL to match Django path
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
                     'Content-Type': 'multipart/form-data',
