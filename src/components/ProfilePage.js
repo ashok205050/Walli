@@ -12,7 +12,7 @@ const ProfilePage = () => {
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const response = await axios.get('/api/profile/', {
+                const response = await axios.get('/profile/', {  // Adjusted URL to match Django path
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('access_token')}`
                     }
@@ -41,35 +41,30 @@ const ProfilePage = () => {
 
     // Save updated profile
     const handleSave = async () => {
-      console.log("Save button clicked");  // Confirm click event
-  
-      const formData = new FormData();
-      formData.append('username', userInfo.username);
-      formData.append('bio', userInfo.bio);
-      if (userInfo.profile_picture instanceof File) {
-          formData.append('profile_picture', userInfo.profile_picture);
-      }
-  
-      try {
-          const response = await axios.put('/api/profile/', formData, {
-              headers: {
-                  'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-                  'Content-Type': 'multipart/form-data',
-              }
-          });
-          console.log("Profile updated successfully:", response.data);  // Confirm successful response
-          setUserInfo(response.data);
-          setEditMode(false);
-      } catch (error) {
-          console.error("Failed to update profile:", error);  // Log full error
-          if (error.response) {
-              console.log("Error status:", error.response.status);
-              console.log("Error data:", error.response.data);
-          }
-      }
-  };
-  
-  
+        const formData = new FormData();
+        formData.append('bio', userInfo.bio);  
+        formData.append('username', userInfo.username);
+        if (userInfo.profile_picture instanceof File) {  
+            formData.append('profile_picture', userInfo.profile_picture);
+        }
+
+        try {
+            const response = await axios.put('/profile/', formData, {  // Adjusted URL to match Django path
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+                    'Content-Type': 'multipart/form-data',
+                }
+            });
+            setUserInfo(response.data);  
+            setEditMode(false);
+        } catch (error) {
+            console.error("Failed to update profile:", error);  
+            if (error.response) {
+                console.log("Error status:", error.response.status);
+                console.log("Error data:", error.response.data);
+            }
+        }
+    };
 
     // Handle user logout
     const handleLogout = () => {
