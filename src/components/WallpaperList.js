@@ -42,11 +42,11 @@ const WallpaperList = () => {
       sortedWallpapers.sort((a, b) => new Date(b.uploaded_at) - new Date(a.uploaded_at));
       setWallpapers(sortedWallpapers);
 
-      // Save to sessionStorage
-      sessionStorage.setItem('wallpapers', JSON.stringify(sortedWallpapers));
-      sessionStorage.setItem('category', category);
-      sessionStorage.setItem('searchQuery', search);
-      sessionStorage.setItem('visibleCount', visibleCount.toString());
+      // Save to localStorage
+      localStorage.setItem('wallpapers', JSON.stringify(sortedWallpapers));
+      localStorage.setItem('category', category);
+      localStorage.setItem('searchQuery', search);
+      localStorage.setItem('visibleCount', visibleCount.toString());
     } catch (error) {
       console.error("Error fetching wallpapers:", error);
     } finally {
@@ -59,10 +59,10 @@ const WallpaperList = () => {
     const categoryFromUrl = params.get('category') || 'all';
     const searchFromUrl = params.get('search') || '';
 
-    const cachedWallpapers = sessionStorage.getItem('wallpapers');
-    const cachedVisibleCount = sessionStorage.getItem('visibleCount') || '24';
-    const cachedCategory = sessionStorage.getItem('category');
-    const cachedSearchQuery = sessionStorage.getItem('searchQuery');
+    const cachedWallpapers = localStorage.getItem('wallpapers');
+    const cachedVisibleCount = localStorage.getItem('visibleCount') || '24';
+    const cachedCategory = localStorage.getItem('category');
+    const cachedSearchQuery = localStorage.getItem('searchQuery');
 
     if (
       cachedWallpapers &&
@@ -87,8 +87,8 @@ const WallpaperList = () => {
       return newCount > wallpapers.length ? wallpapers.length : newCount;
     });
 
-    // Update sessionStorage for the visibleCount when loading more
-    sessionStorage.setItem('visibleCount', (visibleCount + 20).toString());
+    // Update localStorage for the visibleCount when loading more
+    localStorage.setItem('visibleCount', (visibleCount + 20).toString());
   };
 
   return (
