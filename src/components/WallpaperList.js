@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './WallpaperList.css';
 
+const CACHE_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes in milliseconds
+
 const WallpaperList = () => {
   const location = useLocation();
   const [wallpapers, setWallpapers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(24); // Start with 24 wallpapers
+  const [visibleCount, setVisibleCount] = useState(24);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -69,16 +71,24 @@ const WallpaperList = () => {
       cachedCategory === categoryFromUrl &&
       cachedSearchQuery === searchFromUrl
     ) {
-      // Use cached data if the search query and category haven't changed
       setWallpapers(JSON.parse(cachedWallpapers));
       setVisibleCount(Number(cachedVisibleCount));
     } else {
-      // Fetch wallpapers if no cached data or search/category has changed
       fetchWallpapers(categoryFromUrl, searchFromUrl);
     }
 
     setSelectedCategory(categoryFromUrl);
     setSearchQuery(searchFromUrl);
+
+    // Set up cache refresh interval
+    const intervalId = setInterval(() => {
+      localStorage.clear();
+      sessionStorage.clear();
+      fetchWallpapers(categoryFromUrl, searchFromUrl);
+    }, CACHE_REFRESH_INTERVAL);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
   }, [location.search]);
 
   const loadMore = () => {
@@ -87,7 +97,6 @@ const WallpaperList = () => {
       return newCount > wallpapers.length ? wallpapers.length : newCount;
     });
 
-    // Update localStorage for the visibleCount when loading more
     localStorage.setItem('visibleCount', (visibleCount + 20).toString());
   };
 
